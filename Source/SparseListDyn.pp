@@ -290,7 +290,7 @@ end;
 }
 procedure SparseListDynNodeDestroy(AList: PSparseListDyn; ANode: PSparseListDynNode);
 begin
-  // Return a node to the segment bank it belongs to and decrement the number of nodes in use for that segment.
+  // Return a node to the bank of the segment it belongs to and decrement the number of nodes in use for that segment.
   ANode^.Next          := ANode^.Segment^.Bank;
   ANode^.Segment^.Bank := ANode;
   ANode^.Segment^.Used -= 1;
