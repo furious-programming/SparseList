@@ -1,0 +1,6 @@
+lib/
+
+*.exe
+*.dbg
+*.lps
+*.res
