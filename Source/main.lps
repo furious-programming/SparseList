@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="12"/>
+    <BuildModes Active="Debug"/>
+    <Units>
+      <Unit>
+        <Filename Value="main.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <WindowIndex Value="1"/>
+        <ExtraEditorCount Value="1"/>
+        <ExtraEditor1>
+          <EditorIndex Value="-1"/>
+        </ExtraEditor1>
+        <UsageCount Value="96"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="SparseList.pp"/>
+        <IsPartOfProject Value="True"/>
+        <UsageCount Value="96"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="SparseListDyn.pp"/>
+        <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="1"/>
+        <UsageCount Value="35"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\Kids\Products\KidsWNC\Source\Data\Queue\Game_Queue.pp"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="1"/>
+        <UsageCount Value="35"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\Kids\Products\KidsWNC\Source\Data\List\Game_List.pp"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="1"/>
+        <UsageCount Value="35"/>
+      </Unit>
+      <Unit>
+        <Filename Value="D:\Applications\LazarusKids\fpc\3.2.2\source\rtl\inc\heap.inc"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="7"/>
+      </Unit>
+      <Unit>
+        <Filename Value="D:\Applications\LazarusKids\fpc\3.2.2\source\rtl\inc\heaph.inc"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="7"/>
+      </Unit>
+      <Unit>
+        <Filename Value="D:\Applications\LazarusKids\fpc\3.2.2\source\rtl\inc\heaptrc.pp"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="1"/>
+        <UsageCount Value="4"/>
+      </Unit>
+      <Unit>
+        <Filename Value="GenEcoList.pp"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="38" Y="12"/>
+        <UsageCount Value="17"/>
+      </Unit>
+      <Unit>
+        <Filename Value="SparseListGen.pp"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="22"/>
+        <CursorPos X="74" Y="38"/>
+        <UsageCount Value="10"/>
+      </Unit>
+    </Units>
+    <JumpHistory HistoryIndex="28">
+      <Position>
+        <Filename Value="SparseList.pp"/>
+        <Caret Line="348" Column="68" TopLine="341"/>
+      </Position>
+      <Position>
+        <Filename Value="SparseListDyn.pp"/>
+        <Caret Line="252" Column="32" TopLine="238"/>
+      </Position>
+      <Position>
+        <Filename Value="SparseList.pp"/>
+        <Caret Line="52" TopLine="52"/>
+      </Position>
+      <Position>
+        <Filename Value="SparseList.pp"/>
+        <Caret Line="9" Column="27"/>
+      </Position>
+      <Position>
+        <Filename Value="main.lpr"/>
+        <Caret Line="36" Column="48" TopLine="23"/>
+      </Position>
+      <Position>
+        <Filename Value="SparseListDyn.pp"/>
+      </Position>
+      <Position>
+        <Filename Value="SparseListDyn.pp"/>
+        <Caret Line="106" Column="7" TopLine="78"/>
+      </Position>
+      <Position>
+        <Filename Value="SparseListDyn.pp"/>
+        <Caret Line="141" Column="112" TopLine="113"/>
+      </Position>
+      <Position>
+        <Filename Value="SparseListDyn.pp"/>
+        <Caret Line="142" Column="21" TopLine="114"/>
+      </Position>
+      <Position>
+        <Filename Value="SparseListDyn.pp"/>
+        <Caret Line="161" Column="9" TopLine="133"/>
+      </Position>
+      <Position>
+        <Filename Value="SparseListDyn.pp"/>
+        <Caret Line="198" Column="59" TopLine="172"/>
+      </Position>
+      <Position>
+        <Filename Value="SparseListDyn.pp"/>
+        <Caret Line="200" Column="65" TopLine="175"/>
+      </Position>
+      <Position>
+        <Filename Value="SparseListDyn.pp"/>
+        <Caret Line="222" Column="33" TopLine="194"/>
+      </Position>
+      <Position>
+        <Filename Value="SparseListDyn.pp"/>
+        <Caret Line="234" Column="19" TopLine="206"/>
+      </Position>
+      <Position>
+        <Filename Value="SparseListDyn.pp"/>
+        <Caret Line="238" Column="43" TopLine="210"/>
+      </Position>
+      <Position>
+        <Filename Value="SparseListDyn.pp"/>
+        <Caret Line="241" Column="77" TopLine="213"/>
+      </Position>
+      <Position>
+        <Filename Value="SparseListDyn.pp"/>
+        <Caret Line="253" Column="83" TopLine="236"/>
+      </Position>
+      <Position>
+        <Filename Value="SparseListDyn.pp"/>
+        <Caret Line="254" Column="83" TopLine="236"/>
+      </Position>
+      <Position>
+        <Filename Value="SparseListDyn.pp"/>
+        <Caret Line="272" Column="52" TopLine="244"/>
+      </Position>
+      <Position>
+        <Filename Value="SparseListDyn.pp"/>
+        <Caret Line="474" Column="10" TopLine="446"/>
+      </Position>
+      <Position>
+        <Filename Value="SparseListDyn.pp"/>
+        <Caret Line="475" Column="7" TopLine="447"/>
+      </Position>
+      <Position>
+        <Filename Value="main.lpr"/>
+        <Caret Line="6" Column="17"/>
+      </Position>
+      <Position>
+        <Filename Value="main.lpr"/>
+        <Caret Line="5" Column="16"/>
+      </Position>
+      <Position>
+        <Filename Value="SparseListDyn.pp"/>
+        <Caret Line="3" Column="74"/>
+      </Position>
+      <Position>
+        <Filename Value="SparseListDyn.pp"/>
+        <Caret Line="30" Column="64"/>
+      </Position>
+      <Position>
+        <Filename Value="SparseListDyn.pp"/>
+        <Caret Line="4" Column="61"/>
+      </Position>
+      <Position>
+        <Filename Value="SparseListDyn.pp"/>
+        <Caret Line="30" Column="64"/>
+      </Position>
+      <Position>
+        <Filename Value="SparseList.pp"/>
+        <Caret Line="30" Column="64"/>
+      </Position>
+      <Position>
+        <Filename Value="SparseListDyn.pp"/>
+        <Caret Line="3" Column="17"/>
+      </Position>
+    </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes ActiveMode=""/>
+    </RunParams>
+  </ProjectSession>
+</CONFIG>
