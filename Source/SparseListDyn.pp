@@ -249,7 +249,7 @@ begin
   Segment := AList^.SegmentHead;
 
   while Segment <> nil do
-    // Check if the segment contains at least a node and if so, return it.
+    // Check if the current segment contains at least one unused node and if so, return it.
     if Segment^.Bank <> nil then
     begin
       // Pull a node out of the bank head and increment the number of nodes used.
