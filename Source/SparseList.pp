@@ -255,7 +255,7 @@ begin
       Pointer(NodeHead) += AList^.SizeNode;
     end;
 
-    // Clear the  link to the next node in the last node (the next one does not exist).
+    // Clear the link to the next node in the last node (the next one does not exist).
     NodeHead^.Next := nil;
   end;
 
