@@ -435,7 +435,7 @@ begin
   Result^.Bank := @Result^.Data;
   Result^.Used := 0;
 
-  // If the list already contains segments, update the link in the predecessor. Otherwse, new one becomes the head.
+  // If the list already contains segments, update the link in the predecessor. Otherwise, new one becomes the head.
   if Result^.Prev <> nil then
     Result^.Prev^.Next := Result
   else
