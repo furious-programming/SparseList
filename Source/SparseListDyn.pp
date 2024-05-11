@@ -249,14 +249,13 @@ begin
   begin
     // There are available unused nodes in some segment, so find the first such segment.
     Segment := AList^.SegmentHead;
-
-    while Segment <> nil do
+    repeat
       // Check if the current segment contains at least one unused node and if so, go return it.
-      if Segment^.BankHead <> nil then
-        break
-      else
-        // The current segment has no unused nodes, so go to the next one.
-        Segment := Segment^.Next;
+      if Segment^.BankHead <> nil then break;
+
+      // The current segment has no unused nodes, so go to the next one.
+      Segment := Segment^.Next;
+    until Segment = nil;
   end;
 
   // Extract the first node from the segment bank and return it.
