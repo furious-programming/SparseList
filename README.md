@@ -1,6 +1,6 @@
 # Description
 
-This repository contains a test implementation of sparse double-linked list. This list is built from nodes that are physically located in segments that are contiguous memory blocks, which improves data locality and greatly reduces the number of necessary memory allocations and deallocations.
+This repository contains a test implementation of sparse doubly-linked list. This list is built from nodes that are physically located in segments that are contiguous memory blocks, which improves data locality and greatly reduces the number of necessary memory allocations and deallocations.
 
 Segments contain a predetermined number of nodes and therefore have a fixed size, determined when the list is instantiated. When all nodes from a given segment are used to build the list and another node is needed, a new segment is allocated and connected to the existing ones, creating a linked list of segments. Unused segment nodes are available from the bank level, which is a linked list of nodes. Each new node, instead of being allocated individually, is simply pulled from the bank. When a node is no longer needed, instead of being released from memory, it is returned to the bank.
 
