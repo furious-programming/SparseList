@@ -56,10 +56,10 @@ type
 
   // A structure of the list.
   TSparseList = record
-    Segment:        PSparseListSegment; // A pointer to the first segment node.
-    Bank:           PSparseListNode;    // A pointer to the first unused node (head of a singly-linked list of nodes).
-    Head:           PSparseListNode;    // A pointer to the first list node.
-    Tail:           PSparseListNode;    // A pointer to the last list node.
+    SegmentHead:    PSparseListSegment; // A pointer to the first segment node.
+    BankHead:       PSparseListNode;    // A pointer to the first unused node (head of a singly-linked list of nodes).
+    NodeHead:       PSparseListNode;    // A pointer to the first list node.
+    NodeTail:       PSparseListNode;    // A pointer to the last list node.
     NodeNum:        Integer;            // The number of all list nodes.
     NodeNumSegment: Integer;            // The number of nodes on each segment.
     SizeData:       Integer;            // The data size of each node, in bytes.
@@ -139,10 +139,10 @@ end;
 }
 procedure SparseListInitialize(AList: PSparseList; ASizeData, ANodeNumSegment: Integer);
 begin
-  AList^.Segment        := nil;
-  AList^.Bank           := nil;
-  AList^.Head           := nil;
-  AList^.Tail           := nil;
+  AList^.SegmentHead    := nil;
+  AList^.BankHead       := nil;
+  AList^.NodeHead       := nil;
+  AList^.NodeTail       := nil;
   AList^.NodeNum        := 0;
   AList^.NodeNumSegment := ANodeNumSegment;
   AList^.SizeData       := ASizeData;
@@ -167,7 +167,7 @@ var
   SegmentCurr: PSparseListSegment;
   SegmentNext: PSparseListSegment;
 begin
-  SegmentCurr := AList^.Segment;
+  SegmentCurr := AList^.SegmentHead;
 
   // Deallocate all segments of the list, i.e. all dynamically allocated memory.
   while SegmentCurr <> nil do
@@ -195,11 +195,11 @@ begin
   if AList^.NodeNum = 0 then exit;
 
   // Transfer the entire existing list to the bank and reset the fields.
-  AList^.Tail^.Next := AList^.Bank;
-  AList^.Bank       := AList^.Head;
-  AList^.Head       := nil;
-  AList^.Tail       := nil;
-  AList^.NodeNum    := 0;
+  AList^.NodeTail^.Next := AList^.BankHead;
+  AList^.BankHead       := AList^.NodeHead;
+  AList^.NodeHead       := nil;
+  AList^.NodeTail       := nil;
+  AList^.NodeNum        := 0;
 end;
 
 
@@ -233,15 +233,15 @@ var
   NodeTail:    PSparseListNode;
 begin
   // Check if there are nodes in the bank and if not, allocate a new segment.
-  if AList^.Bank = nil then
+  if AList^.BankHead = nil then
   begin
     // Allocate a new node segment and connect it to the segment list.
     SegmentHead       := GetMem(SizeOf(TSparseListSegment) + AList^.SizeNode * AList^.NodeNumSegment);
-    SegmentHead^.Next := AList^.Segment;
+    SegmentHead^.Next := AList^.SegmentHead;
 
     // Update the head of the segment list and set the segment bank to its first node.
-    AList^.Segment := SegmentHead;
-    AList^.Bank    := @SegmentHead^.Data;
+    AList^.SegmentHead := SegmentHead;
+    AList^.BankHead    := @SegmentHead^.Data;
 
     // Get a pointer to the first and last node in the segment data block.
     NodeHead := @SegmentHead^.Data;
@@ -260,8 +260,8 @@ begin
   end;
 
   // Pull out the first available node from the bank and return it.
-  Result      := AList^.Bank;
-  AList^.Bank := AList^.Bank^.Next;
+  Result          := AList^.BankHead;
+  AList^.BankHead := AList^.BankHead^.Next;
 end;
 
 
@@ -281,8 +281,8 @@ end;
 procedure SparseListNodeDestroy(AList: PSparseList; ANode: PSparseListNode);
 begin
   // Just return the node to the bank (update the head node of the bank).
-  ANode^.Next := AList^.Bank;
-  AList^.Bank := ANode;
+  ANode^.Next     := AList^.BankHead;
+  AList^.BankHead := ANode;
 end;
 
 
@@ -307,14 +307,14 @@ begin
   if ANode^.Prev <> nil then
     ANode^.Prev^.Next := ANode^.Next
   else
-    AList^.Head := ANode^.Next;
+    AList^.NodeHead := ANode^.Next;
 
   // If the node to be detached is not the tail of the list, update the link of the next node.
   // Otherwise, update the pointer to the tail of the list.
   if ANode^.Next <> nil then
     ANode^.Next^.Prev := ANode^.Prev
   else
-    AList^.Tail := ANode^.Prev;
+    AList^.NodeTail := ANode^.Prev;
 
   // The node has been detached, so decrement the number of nodes in the list.
   AList^.NodeNum -= 1;
@@ -339,19 +339,19 @@ end;
 procedure SparseListNodeAppend(AList: PSparseList; ANode: PSparseListNode);
 begin
   // Set the links in the node to attach.
-  ANode^.Prev := AList^.Tail;
+  ANode^.Prev := AList^.NodeTail;
   ANode^.Next := nil;
 
   // If the list is not empty, attach a node to the end of the list and update the link in the existing tail.
   // Otherwise (if the list is empty), the new node will become its head and tail.
-  if AList^.Tail <> nil then
-    AList^.Tail^.Next := ANode
+  if AList^.NodeTail <> nil then
+    AList^.NodeTail^.Next := ANode
   else
-    AList^.Head := ANode;
+    AList^.NodeHead := ANode;
 
   // Update the pointer to the tail of the list and increment the number of list nodes.
-  AList^.Tail    := ANode;
-  AList^.NodeNum += 1;
+  AList^.NodeTail := ANode;
+  AList^.NodeNum  += 1;
 end;
 
 
@@ -384,8 +384,8 @@ begin
   ADest^.Prev := ANode;
 
   // If the new node was inserted at the beginning of the list, update the head pointer.
-  if AList^.Head = ADest then
-    AList^.Head := ANode;
+  if AList^.NodeHead = ADest then
+    AList^.NodeHead := ANode;
 
   // The new node has been attached, so increment the list node counter.
   AList^.NodeNum += 1;

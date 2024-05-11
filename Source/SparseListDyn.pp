@@ -43,11 +43,11 @@ type
 
   // A structure of a segment node.
   TSparseListDynSegment = record
-    Prev: PSparseListDynSegment; // A pointer to the previous segment node.
-    Next: PSparseListDynSegment; // A pointer to the next segment node.
-    Bank: PSparseListDynNode;    // A pointer to the first unused node of the segment (head of a singly-linked list of nodes).
-    Used: Integer;               // The number of all segment nodes currently in use.
-    Data: record end;            // The beginning of the segment nodes' memory block (has name, address and zero-size).
+    Prev:     PSparseListDynSegment; // A pointer to the previous segment node.
+    Next:     PSparseListDynSegment; // A pointer to the next segment node.
+    BankHead: PSparseListDynNode;    // A pointer to the first unused node of the segment (head of a singly-linked list of nodes).
+    UsedNum:  Integer;               // The number of all segment nodes currently in use.
+    Data:     record end;            // The beginning of the segment nodes' memory block (has name, address and zero-size).
   end;
 
   // A structure of a list node.
@@ -250,12 +250,12 @@ begin
 
   while Segment <> nil do
     // Check if the current segment contains at least one unused node and if so, return it.
-    if Segment^.Bank <> nil then
+    if Segment^.BankHead <> nil then
     begin
       // Pull a node out of the bank head and increment the number of nodes used.
-      Result        := Segment^.Bank;
-      Segment^.Bank := Segment^.Bank^.Next;
-      Segment^.Used += 1;
+      Result            := Segment^.BankHead;
+      Segment^.BankHead := Segment^.BankHead^.Next;
+      Segment^.UsedNum  += 1;
 
       // An unused node was found in an existing segment, so exit.
       exit;
@@ -268,9 +268,9 @@ begin
   Segment := SparseListDynSegmentCreate(AList);
 
   // Extract the first node from the new segment bank and return it.
-  Result        := Segment^.Bank;
-  Segment^.Bank := Segment^.Bank^.Next;
-  Segment^.Used += 1;
+  Result            := Segment^.BankHead;
+  Segment^.BankHead := Segment^.BankHead^.Next;
+  Segment^.UsedNum  += 1;
 end;
 
 
@@ -291,12 +291,12 @@ end;
 procedure SparseListDynNodeDestroy(AList: PSparseListDyn; ANode: PSparseListDynNode);
 begin
   // Return a node to the bank of the segment it belongs to and decrement the number of nodes in use for that segment.
-  ANode^.Next          := ANode^.Segment^.Bank;
-  ANode^.Segment^.Bank := ANode;
-  ANode^.Segment^.Used -= 1;
+  ANode^.Next              := ANode^.Segment^.BankHead;
+  ANode^.Segment^.BankHead := ANode;
+  ANode^.Segment^.UsedNum  -= 1;
 
   // If all nodes of a segment are not in use, free that segment from memory.
-  if ANode^.Segment^.Used = 0 then
+  if ANode^.Segment^.UsedNum = 0 then
     SparseListDynSegmentDestroy(AList, ANode^.Segment);
 end;
 
@@ -429,11 +429,11 @@ var
   NodeTail: PSparseListDynNode;
 begin
   // Allocate a new segment and initialize its fields.
-  Result       := GetMem(SizeOf(TSparseListDynSegment) + AList^.SizeNode * AList^.NodeNumSegment);
-  Result^.Prev := AList^.SegmentTail;
-  Result^.Next := nil;
-  Result^.Bank := @Result^.Data;
-  Result^.Used := 0;
+  Result           := GetMem(SizeOf(TSparseListDynSegment) + AList^.SizeNode * AList^.NodeNumSegment);
+  Result^.Prev     := AList^.SegmentTail;
+  Result^.Next     := nil;
+  Result^.BankHead := @Result^.Data;
+  Result^.UsedNum  := 0;
 
   // If the list already contains segments, update the link in the predecessor. Otherwise, new one becomes the head.
   if Result^.Prev <> nil then
