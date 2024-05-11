@@ -435,17 +435,15 @@ begin
   Result^.Bank := @Result^.Data;
   Result^.Used := 0;
 
-  // If the list already contains segments, update the link in the predecessor.
+  // If the list already contains segments, update the link in the predecessor. Otherwse, new one becomes the head.
   if Result^.Prev <> nil then
-    Result^.Prev^.Next := Result;
+    Result^.Prev^.Next := Result
+  else
+    AList^.SegmentHead := Result;
 
   // The allocated segment is the new tail, so update the pointer to the tail of the segment list.
   AList^.SegmentTail := Result;
   AList^.SegmentNum  += 1;
-
-  // If the list does not contain any segments (is empty), the allocated segment also becomes the head.
-  if AList^.SegmentHead = nil then
-    AList^.SegmentHead := Result;
 
   // Get a pointer to the first and last node in the segment data block.
   NodeHead := @Result^.Data;
