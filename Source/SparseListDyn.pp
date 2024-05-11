@@ -242,10 +242,8 @@ function SparseListDynNodeCreate(AList: PSparseListDyn): PSparseListDynNode;
 var
   Segment: PSparseListDynSegment;
 begin
-  // Quickly check if there are unused nodes and if not, allocate a new segment.
-  if AList^.NodeNum = AList^.SegmentNum * AList^.NodeNumSegment then
-    Segment := SparseListDynSegmentCreate(AList)
-  else
+  // Quickly check if there are unused nodes and if so, find it.
+  if AList^.NodeNum < AList^.SegmentNum * AList^.NodeNumSegment then
   begin
     // There are available unused nodes in some segment, so find the first such segment.
     Segment := AList^.SegmentHead;
@@ -256,7 +254,10 @@ begin
       // The current segment has no unused nodes, so go to the next one.
       Segment := Segment^.Next;
     until Segment = nil;
-  end;
+  end
+  else
+    // There is no segment or one with an unused node, so allocate a new one.
+    Segment := SparseListDynSegmentCreate(AList);
 
   // Extract the first node from the segment bank and return it.
   Result            := Segment^.BankHead;
