@@ -221,13 +221,10 @@ end;
 {
   Creates a new list node and returns it.
 
-  This function is used to return the first available unused node. If the list already has segments allocated, it scans them
-  for an unused node, iterating from the head to the tail of the segment list. Once it finds a segment that has an unused
-  node, it pulls it out of the bank, returns it, and terminates.
-
-  If the list has no segments allocated (it is empty), or all nodes of all segments are currently in use (all of them are
-  attached to the list), this function allocates and initializes the new segment, attaches it to the segment list, then pulls
-  the node from its bank and returns it.
+  This function quickly checks if there is an unused node in any segment and if not, allocates a new segment. A new segment is
+  allocated only if the list is currently empty or if the list is composed of all available nodes of all allocated segments.
+  If any segment already contains an unused node, it is found in the loop. Once the source segment is determined, the first
+  node from its bank is pulled and returned.
 
   [!] This function must be used for each new node you want to add to the list.
 
@@ -245,29 +242,24 @@ function SparseListDynNodeCreate(AList: PSparseListDyn): PSparseListDynNode;
 var
   Segment: PSparseListDynSegment;
 begin
-  // Start looking for an unused node from the first segment.
-  Segment := AList^.SegmentHead;
+  // Quickly check if there are unused nodes and if not, allocate a new segment.
+  if AList^.NodeNum = AList^.SegmentNum * AList^.NodeNumSegment then
+    Segment := SparseListDynSegmentCreate(AList)
+  else
+  begin
+    // There are available unused nodes in some segment, so find the first such segment.
+    Segment := AList^.SegmentHead;
 
-  while Segment <> nil do
-    // Check if the current segment contains at least one unused node and if so, return it.
-    if Segment^.BankHead <> nil then
-    begin
-      // Pull a node out of the bank head and increment the number of nodes used.
-      Result            := Segment^.BankHead;
-      Segment^.BankHead := Segment^.BankHead^.Next;
-      Segment^.UsedNum  += 1;
+    while Segment <> nil do
+      // Check if the current segment contains at least one unused node and if so, go return it.
+      if Segment^.BankHead <> nil then
+        break
+      else
+        // The current segment has no unused nodes, so go to the next one.
+        Segment := Segment^.Next;
+  end;
 
-      // An unused node was found in an existing segment, so exit.
-      exit;
-    end
-    else
-      // The current segment has no unused nodes, so go to the next segment.
-      Segment := Segment^.Next;
-
-  // There is no available segment or none of the existing segments contain unused nodes, so allocate a new one.
-  Segment := SparseListDynSegmentCreate(AList);
-
-  // Extract the first node from the new segment bank and return it.
+  // Extract the first node from the segment bank and return it.
   Result            := Segment^.BankHead;
   Segment^.BankHead := Segment^.BankHead^.Next;
   Segment^.UsedNum  += 1;
