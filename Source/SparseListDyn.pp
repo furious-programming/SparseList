@@ -221,10 +221,9 @@ end;
 {
   Creates a new list node and returns it.
 
-  This function quickly checks if there is an unused node in any segment and if not, allocates a new segment. A new segment is
-  allocated only if the list is currently empty or if the list is composed of all available nodes of all allocated segments.
-  If any segment already contains an unused node, it is found in the loop. Once the source segment is determined, the first
-  node from its bank is pulled and returned.
+  This function quickly checks whether there is an unused node in any segment and, if so, searches for it in a loop, checking
+  the bank of each segment. If there is no segment allocated yet or no segment contains an unused node, a new segment is
+  allocated. Once the source segment is determined, the first node from its bank is pulled and returned.
 
   [!] This function must be used for each new node you want to add to the list.
 
