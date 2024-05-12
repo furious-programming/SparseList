@@ -381,17 +381,16 @@ end;
 procedure SparseListDynNodeInsert(AList: PSparseListDyn; ANode, ADest: PSparseListDynNode);
 begin
   // If the target node is not the head of the list, update its link to the next node.
+  // Otherwise, the new node becomes the new head of the list.
   if ADest^.Prev <> nil then
-    ADest^.Prev^.Next := ANode;
+    ADest^.Prev^.Next := ANode
+  else
+    AList^.NodeHead := ANode;
 
   // Attach the new node to the dest node and its predecessor.
   ANode^.Prev := ADest^.Prev;
   ANode^.Next := ADest;
   ADest^.Prev := ANode;
-
-  // If the new node was inserted at the beginning of the list, update the head pointer.
-  if AList^.NodeHead = ADest then
-    AList^.NodeHead := ANode;
 
   // The new node has been attached, so increment the list node counter.
   AList^.NodeNum += 1;
