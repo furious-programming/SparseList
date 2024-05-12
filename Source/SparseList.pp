@@ -103,7 +103,7 @@ implementation
 }
 function SparseListCreate(ASizeData, ANodeNumSegment: Integer): PSparseList;
 begin
-  Result := AllocMem(SizeOf(TSparseList));
+  Result := GetMem(SizeOf(TSparseList));
   SparseListInitialize(Result, ASizeData, ANodeNumSegment);
 end;
 
