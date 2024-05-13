@@ -61,25 +61,25 @@ type
 
 
   // Allocating and deallocating a list.
-  function  SimpleListCreate      (ASizeData: Integer): PSimpleList;
-  procedure SimpleListDestroy     (AList: PSimpleList);
+  function  SimpleListCreate      (ASizeData: Integer): PSimpleList; // Allocates a new list on the heap and initializes it.
+  procedure SimpleListDestroy     (AList: PSimpleList); // Finalizes and deallocates the list from the heap.
 
   // Initializing and finalizing a list.
-  procedure SimpleListInitialize  (AList: PSimpleList; ASizeData: Integer);
-  procedure SimpleListFinalize    (AList: PSimpleList);
+  procedure SimpleListInitialize  (AList: PSimpleList; ASizeData: Integer); // Initializes an existing list.
+  procedure SimpleListFinalize    (AList: PSimpleList); // Finalizes an existing list.
 
   // Clearing the list.
-  procedure SimpleListClear       (AList: PSimpleList);
+  procedure SimpleListClear       (AList: PSimpleList); // Removes all nodes of the list.
 
   // Sorting the list.
   procedure SimpleListSortBubble  (AList: PSimpleList; ACallback: TSimpleListNodeCallbackCompare); // Performs bubble sorting on the list.
 
   // Creating, destroying and managing nodes.
-  function  SimpleListNodeCreate  (AList: PSimpleList): PSimpleListNode;
-  procedure SimpleListNodeDestroy (AList: PSimpleList; ANode: PSimpleListNode);
-  procedure SimpleListNodeExtract (AList: PSimpleList; ANode: PSimpleListNode);
-  procedure SimpleListNodeAppend  (AList: PSimpleList; ANode: PSimpleListNode);
-  procedure SimpleListNodeInsert  (AList: PSimpleList; ANode, ADest: PSimpleListNode);
+  function  SimpleListNodeCreate  (AList: PSimpleList): PSimpleListNode; // Creates a new list node and returns it.
+  procedure SimpleListNodeDestroy (AList: PSimpleList; ANode: PSimpleListNode); // Removes a node from the list.
+  procedure SimpleListNodeExtract (AList: PSimpleList; ANode: PSimpleListNode); // Detaches the given node from the list.
+  procedure SimpleListNodeAppend  (AList: PSimpleList; ANode: PSimpleListNode); // Attaches an external node to the end of the list.
+  procedure SimpleListNodeInsert  (AList: PSimpleList; ANode, ADest: PSimpleListNode); // Inserts an external node in place of an existing one.
 
 
 implementation
@@ -154,6 +154,7 @@ var
 begin
   NodeCurr := AList^.NodeHead;
 
+  // Deallocate all nodes separately.
   while NodeCurr <> nil do
   begin
     NodeNext := NodeCurr^.Next;
@@ -179,6 +180,7 @@ var
 begin
   NodeCurr := AList^.NodeHead;
 
+  // Deallocate all nodes separately.
   while NodeCurr <> nil do
   begin
     NodeNext := NodeCurr^.Next;
@@ -186,6 +188,7 @@ begin
     NodeCurr := NodeNext;
   end;
 
+  // Reset list fields.
   AList^.NodeHead := nil;
   AList^.NodeTail := nil;
   AList^.NodeNum  := 0;
@@ -304,16 +307,21 @@ end;
 }
 procedure SimpleListNodeExtract(AList: PSimpleList; ANode: PSimpleListNode);
 begin
+  // If the node to be detached is not the head of the list, update the link of the previous node.
+  // Otherwise, update the pointer to the head of the list.
   if ANode^.Prev <> nil then
     ANode^.Prev^.Next := ANode^.Next
   else
     AList^.NodeHead := ANode^.Next;
 
+  // If the node to be detached is not the tail of the list, update the link of the next node.
+  // Otherwise, update the pointer to the tail of the list.
   if ANode^.Next <> nil then
     ANode^.Next^.Prev := ANode^.Prev
   else
     AList^.NodeTail := ANode^.Prev;
 
+  // The node has been detached, so decrement the number of nodes in the list.
   AList^.NodeNum -= 1;
 end;
 
@@ -335,14 +343,18 @@ end;
 }
 procedure SimpleListNodeAppend(AList: PSimpleList; ANode: PSimpleListNode);
 begin
+  // Set the links in the node to attach.
   ANode^.Prev := AList^.NodeTail;
   ANode^.Next := nil;
 
+  // If the list is not empty, attach a node to the end of the list and update the link in the existing tail.
+  // Otherwise (if the list is empty), the new node will become its head and tail.
   if AList^.NodeTail <> nil then
     AList^.NodeTail^.Next := ANode
   else
     AList^.NodeHead := ANode;
 
+  // Update the pointer to the tail of the list and increment the number of list nodes.
   AList^.NodeTail := ANode;
   AList^.NodeNum  += 1;
 end;
@@ -367,15 +379,19 @@ end;
 }
 procedure SimpleListNodeInsert(AList: PSimpleList; ANode, ADest: PSimpleListNode);
 begin
+  // If the target node is not the head of the list, update its link to the next node.
+  // Otherwise, the new node becomes the new head of the list.
   if ADest^.Prev <> nil then
     ADest^.Prev^.Next := ANode
   else
     AList^.NodeHead := ANode;
 
+  // Attach the new node to the dest node and its predecessor.
   ANode^.Prev := ADest^.Prev;
   ANode^.Next := ADest;
   ADest^.Prev := ANode;
 
+  // The new node has been attached, so increment the list node counter.
   AList^.NodeNum += 1;
 end;
 
