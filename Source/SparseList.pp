@@ -66,6 +66,10 @@ type
     SizeNode:       Integer;            // The size of a single node, in bytes.
   end;
 
+type
+  // Callback comparing data of two nodes, for the purpose of sorting the list.
+  TSparseListNodeCallbackCompare = function (ANodeA, ANodeB: PSparseListNode): Boolean;
+
 
   // Allocating and deallocating a list.
   function  SparseListCreate      (ASizeData, ANodeNumSegment: Integer): PSparseList; // Allocates a new list on the heap and initializes it.
@@ -77,6 +81,9 @@ type
 
   // Clearing the list.
   procedure SparseListClear       (AList: PSparseList); // Removes all nodes of the list.
+
+  // Sorting the list.
+  procedure SparseListSortBubble  (AList: PSparseList; ACallback: TSparseListNodeCallbackCompare); // Performs bubble sorting on the list.
 
   // Creating, destroying and managing nodes.
   function  SparseListNodeCreate  (AList: PSparseList): PSparseListNode; // Creates a new list node and returns it.
@@ -200,6 +207,61 @@ begin
   AList^.NodeHead       := nil;
   AList^.NodeTail       := nil;
   AList^.NodeNum        := 0;
+end;
+
+
+{
+  Performs bubble sorting on the list.
+
+  This function is used to sort the contents of the list using the bubble sort algorithm. The swap only affects the data in
+  the nodes, which means that the pointers in the nodes are not modified during sorting.
+
+  [i] This function is implemented solely for the purposes of benchmarking the performance of access to nodes. This is one
+      of the least efficient versions of bubble sort, and although it reduces the number of iterations by half (thanks to
+      sentinel), it does not check whether any swap was performed during the iteration of the main loop. If you need an
+      efficient sorting algorithm for a linked list, use something better (e.g. quick sort).
+
+  Parameters:
+    • AList     — a pointer to the structure of the list.
+    • ACallback — a pointer to the callback function that compares the data of two nodes.
+}
+procedure SparseListSortBubble(AList: PSparseList; ACallback: TSparseListNodeCallbackCompare);
+var
+  NodeLast: PSparseListNode;
+  NodeCurr: PSparseListNode;
+  NodeData: Pointer;
+begin
+  // If there are not at least two nodes, there is nothing to sort.
+  if AList^.NodeNum < 2 then exit;
+
+  // Allocate the data block needed for node swap and set the sentinel.
+  NodeData := GetMem(AList^.SizeData);
+  NodeLast := AList^.NodeTail;
+
+  repeat
+    // Start a full iteration through the list always at the head node.
+    NodeCurr := AList^.NodeHead;
+
+    // Iterate until a sentinel is encountered.
+    repeat
+      // Compare neighboring nodes and, if necessary, swap them (only data).
+      if ACallback(NodeCurr, NodeCurr^.Next) then
+      begin
+        Move(NodeCurr^.Data,       NodeData^,            AList^.SizeData);
+        Move(NodeCurr^.Next^.Data, NodeCurr^.Data,       AList^.SizeData);
+        Move(NodeData^,            NodeCurr^.Next^.Data, AList^.SizeData);
+      end;
+
+      // Regardless of whether there was a swap or not, go to the next node.
+      NodeCurr := NodeCurr^.Next;
+    until NodeCurr = NodeLast;
+
+    // Move the sentinel one node towards the head of the list to reduce the number of iterations.
+    NodeLast := NodeLast^.Prev;
+  until NodeLast = AList^.NodeHead;
+
+  // Free up a temporary data block for node data swap.
+  FreeMem(NodeData);
 end;
 
 
