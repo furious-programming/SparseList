@@ -34,7 +34,161 @@ unit TestSimpleList;
 
 interface
 
+uses
+  SimpleList;
+
+
+  function TestSimpleListAppend   (AList: PSimpleList; ANodeNum: Integer): Int64;
+  function TestSimpleListInsert   (AList: PSimpleList): Int64;
+  function TestSimpleListChop     (AList: PSimpleList): Int64;
+  function TestSimpleListSort     (AList: PSimpleList): Int64;
+  function TestSimpleListClear    (AList: PSimpleList): Int64;
+  function TestSimpleListTraverse (AList: PSimpleList): Int64;
+  function TestSimpleListDestroy  (AList: PSimpleList): Int64;
+
+
 implementation
+
+uses
+  TestUtils;
+
+
+function TestSimpleListAppend(AList: PSimpleList; ANodeNum: Integer): Int64;
+var
+  NodeSeed: UInt32 = $600D5EED;
+begin
+  Result := TestGetTicks();
+
+  while ANodeNum > 0 do
+  begin
+    SimpleListNodeAppend(AList, SimpleListNodeCreate(AList));
+    PUInt32(@AList^.NodeTail^.Data)^ := NodeSeed;
+
+    NodeSeed := NodeSeed xor (NodeSeed shl 13);
+    NodeSeed := NodeSeed xor (NodeSeed shr 17);
+    NodeSeed := NodeSeed xor (NodeSeed shl  5);
+
+    ANodeNum -= 1;
+  end;
+
+  Result := TestGetTicks - Result;
+end;
+
+
+function TestSimpleListInsert(AList: PSimpleList): Int64;
+var
+  NodeNew:    PSimpleListNode;
+  NodeCurr:   PSimpleListNode;
+  NodeInsert: Integer = 0;
+  NodeSeed:   UInt32  = $BAD5EED;
+begin
+  Result   := TestGetTicks();
+  NodeCurr := AList^.NodeHead;
+
+  while NodeCurr <> nil do
+  begin
+    if NodeInsert = 0 then
+    begin
+      NodeNew := SimpleListNodeCreate(AList);
+      PUInt32(@NodeNew^.Data)^ := NodeSeed;
+
+      SimpleListNodeInsert(AList, NodeNew, NodeCurr);
+    end;
+
+    NodeSeed := NodeSeed xor (NodeSeed shl 13);
+    NodeSeed := NodeSeed xor (NodeSeed shr 17);
+    NodeSeed := NodeSeed xor (NodeSeed shl  5);
+
+    NodeCurr   := NodeCurr^.Next;
+    NodeInsert := (NodeInsert + 1) and %11;
+  end;
+
+  Result := TestGetTicks - Result;
+end;
+
+
+function TestSimpleListChop(AList: PSimpleList): Int64;
+var
+  Node:     PSimpleListNode;
+  NodeNext: PSimpleListNode;
+  NodeChop: Integer = 0;
+begin
+  Result := TestGetTicks();
+  Node   := AList^.NodeHead;
+
+  while Node <> nil do
+  begin
+    NodeNext := Node^.Next;
+
+    if NodeChop = 0 then
+    begin
+      SimpleListNodeExtract(AList, Node);
+      SimpleListNodeDestroy(AList, Node);
+    end;
+
+    Node     := NodeNext;
+    NodeChop := (NodeChop + 1) and %11;
+  end;
+
+  Result := TestGetTicks - Result;
+end;
+
+
+  function TestSimpleListSortNodes(ANodeA, ANodeB: PSimpleListNode): Boolean;
+  begin
+    Result := PUInt32(@ANodeA^.Data)^ > PUInt32(@ANodeB^.Data)^;
+  end;
+
+function TestSimpleListSort(AList: PSimpleList): Int64;
+begin
+  Result := TestGetTicks();
+  SimpleListSortBubble(AList, @TestSimpleListSortNodes);
+  Result := TestGetTicks() - Result;
+end;
+
+
+function TestSimpleListClear(AList: PSimpleList): Int64;
+begin
+  Result := TestGetTicks();
+  SimpleListClear(AList);
+  Result := TestGetTicks() - Result;
+end;
+
+
+function TestSimpleListTraverse(AList: PSimpleList): Int64;
+var
+  Node: PSimpleListNode;
+  Num:  Integer = 0;
+begin
+  Result := TestGetTicks();
+  Node   := AList^.NodeHead;
+
+  while Node <> AList^.NodeTail do
+  begin
+    if PUInt32(@Node^.Data)^ and 1 = 1 then
+      Num += 1;
+
+    Node := Node^.Next;
+  end;
+
+  repeat
+    Node := Node^.Prev;
+
+    if PUInt32(@Node^.Data)^ and 1 = 0 then
+      Num -= 1;
+  until Node = AList^.NodeHead;
+
+  Result := TestGetTicks() - Result;
+end;
+
+
+function TestSimpleListDestroy(AList: PSimpleList): Int64;
+begin
+  Result := TestGetTicks();
+  SimpleListDestroy(AList);
+  Result := TestGetTicks() - Result;
+end;
+
 
 end.
 

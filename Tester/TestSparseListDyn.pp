@@ -34,7 +34,161 @@ unit TestSparseListDyn;
 
 interface
 
+uses
+  SparseListDyn;
+
+
+  function TestSparseListDynAppend   (AList: PSparseListDyn; ANodeNum: Integer): Int64;
+  function TestSparseListDynInsert   (AList: PSparseListDyn): Int64;
+  function TestSparseListDynChop     (AList: PSparseListDyn): Int64;
+  function TestSparseListDynSort     (AList: PSparseListDyn): Int64;
+  function TestSparseListDynClear    (AList: PSparseListDyn): Int64;
+  function TestSparseListDynTraverse (AList: PSparseListDyn): Int64;
+  function TestSparseListDynDestroy  (AList: PSparseListDyn): Int64;
+
+
 implementation
+
+uses
+  TestUtils;
+
+
+function TestSparseListDynAppend(AList: PSparseListDyn; ANodeNum: Integer): Int64;
+var
+  NodeSeed: UInt32 = $600D5EED;
+begin
+  Result := TestGetTicks();
+
+  while ANodeNum > 0 do
+  begin
+    SparseListDynNodeAppend(AList, SparseListDynNodeCreate(AList));
+    PUInt32(@AList^.NodeTail^.Data)^ := NodeSeed;
+
+    NodeSeed := NodeSeed xor (NodeSeed shl 13);
+    NodeSeed := NodeSeed xor (NodeSeed shr 17);
+    NodeSeed := NodeSeed xor (NodeSeed shl  5);
+
+    ANodeNum -= 1;
+  end;
+
+  Result := TestGetTicks() - Result;
+end;
+
+
+function TestSparseListDynInsert(AList: PSparseListDyn): Int64;
+var
+  NodeNew:    PSparseListDynNode;
+  NodeCurr:   PSparseListDynNode;
+  NodeInsert: Integer = 0;
+  NodeSeed:   UInt32  = $BAD5EED;
+begin
+  Result   := TestGetTicks();
+  NodeCurr := AList^.NodeHead;
+
+  while NodeCurr <> nil do
+  begin
+    if NodeInsert = 0 then
+    begin
+      NodeNew := SparseListDynNodeCreate(AList);
+      PUInt32(@NodeNew^.Data)^ := NodeSeed;
+
+      SparseListDynNodeInsert(AList, NodeNew, NodeCurr);
+    end;
+
+    NodeSeed := NodeSeed xor (NodeSeed shl 13);
+    NodeSeed := NodeSeed xor (NodeSeed shr 17);
+    NodeSeed := NodeSeed xor (NodeSeed shl  5);
+
+    NodeCurr   := NodeCurr^.Next;
+    NodeInsert := (NodeInsert + 1) and %11;
+  end;
+
+  Result := TestGetTicks - Result;
+end;
+
+
+function TestSparseListDynChop(AList: PSparseListDyn): Int64;
+var
+  Node:     PSparseListDynNode;
+  NodeNext: PSparseListDynNode;
+  NodeChop: Integer = 0;
+begin
+  Result := TestGetTicks();
+  Node   := AList^.NodeHead;
+
+  while Node <> nil do
+  begin
+    NodeNext := Node^.Next;
+
+    if NodeChop = 0 then
+    begin
+      SparseListDynNodeExtract(AList, Node);
+      SparseListDynNodeDestroy(AList, Node);
+    end;
+
+    Node     := NodeNext;
+    NodeChop := (NodeChop + 1) and %11;
+  end;
+
+  Result := TestGetTicks - Result;
+end;
+
+
+  function TestSparseListDynSortNodes(ANodeA, ANodeB: PSparseListDynNode): Boolean;
+  begin
+    Result := PUInt32(@ANodeA^.Data)^ > PUInt32(@ANodeB^.Data)^;
+  end;
+
+function TestSparseListDynSort(AList: PSparseListDyn): Int64;
+begin
+  Result := TestGetTicks();
+  SparseListDynSortBubble(AList, @TestSparseListDynSortNodes);
+  Result := TestGetTicks() - Result;
+end;
+
+
+function TestSparseListDynClear(AList: PSparseListDyn): Int64;
+begin
+  Result := TestGetTicks();
+  SparseListDynClear(AList);
+  Result := TestGetTicks() - Result;
+end;
+
+
+function TestSparseListDynTraverse(AList: PSparseListDyn): Int64;
+var
+  Node: PSparseListDynNode;
+  Num:  Integer = 0;
+begin
+  Result := TestGetTicks();
+  Node   := AList^.NodeHead;
+
+  while Node <> AList^.NodeTail do
+  begin
+    if PUInt32(@Node^.Data)^ and 1 = 1 then
+      Num += 1;
+
+    Node := Node^.Next;
+  end;
+
+  repeat
+    Node := Node^.Prev;
+
+    if PUInt32(@Node^.Data)^ and 1 = 0 then
+      Num -= 1;
+  until Node = AList^.NodeHead;
+
+  Result := TestGetTicks() - Result;
+end;
+
+
+function TestSparseListDynDestroy(AList: PSparseListDyn): Int64;
+begin
+  Result := TestGetTicks();
+  SparseListDynDestroy(AList);
+  Result := TestGetTicks() - Result;
+end;
+
 
 end.
 
