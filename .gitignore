@@ -2,7 +2,6 @@ lib/
 
 *.exe
 *.dbg
-*.lpr
 *.lpi
 *.lps
 *.res
