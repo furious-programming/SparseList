@@ -231,10 +231,7 @@ end;
   This function is used to sort the contents of the list using the bubble sort algorithm. The swap only affects the data in
   the nodes, which means that the pointers in the nodes are not modified during sorting.
 
-  [i] This function is implemented solely for the purposes of benchmarking the performance of access to nodes. This is one
-      of the least efficient versions of bubble sort, and although it reduces the number of iterations by half (thanks to
-      sentinel), it does not check whether any swap was performed during the iteration of the main loop. If you need an
-      efficient sorting algorithm for a linked list, use something better (e.g. quick sort).
+  [i] This function is implemented solely for the purposes of benchmarking the performance of access to nodes.
 
   Parameters:
     • AList     — a pointer to the structure of the list.
@@ -245,6 +242,7 @@ var
   NodeLast: PSparseListDynNode;
   NodeCurr: PSparseListDynNode;
   NodeData: Pointer;
+  NodeSwapped: Boolean;
 begin
   // If there are not at least two nodes, there is nothing to sort.
   if AList^.NodeNum < 2 then exit;
@@ -255,7 +253,8 @@ begin
 
   repeat
     // Start a full iteration through the list always at the head node.
-    NodeCurr := AList^.NodeHead;
+    NodeCurr    := AList^.NodeHead;
+    NodeSwapped := False;
 
     // Iterate until a sentinel is encountered.
     repeat
@@ -265,6 +264,8 @@ begin
         Move(NodeCurr^.Data,       NodeData^,            AList^.SizeData);
         Move(NodeCurr^.Next^.Data, NodeCurr^.Data,       AList^.SizeData);
         Move(NodeData^,            NodeCurr^.Next^.Data, AList^.SizeData);
+
+        NodeSwapped := True;
       end;
 
       // Regardless of whether there was a swap or not, go to the next node.
@@ -273,7 +274,7 @@ begin
 
     // Move the sentinel one node towards the head of the list to reduce the number of iterations.
     NodeLast := NodeLast^.Prev;
-  until NodeLast = AList^.NodeHead;
+  until (NodeLast = AList^.NodeHead) or not NodeSwapped;
 
   // Free up a temporary data block for node data swap.
   FreeMem(NodeData);
