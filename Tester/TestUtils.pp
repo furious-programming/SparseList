@@ -110,9 +110,9 @@ begin
   PercentSparseDyn := Round(ATimeSparseDyn * 100 / TimeMin);
 
   Write(
-    IfThen(PercentSimple    = 100, '-', Format('%.0n%%', [PercentSimple    + 0.0])):RESULT_FIELD_SIZE_TIME,
-    IfThen(PercentSparse    = 100, '-', Format('%.0n%%', [PercentSparse    + 0.0])):RESULT_FIELD_SIZE_TIME,
-    IfThen(PercentSparseDyn = 100, '-', Format('%.0n%%', [PercentSparseDyn + 0.0])):RESULT_FIELD_SIZE_TIME
+    IfThen(PercentSimple    = 100, '-', Format('%.0n%%', [PercentSimple    - 100.0])):RESULT_FIELD_SIZE_TIME,
+    IfThen(PercentSparse    = 100, '-', Format('%.0n%%', [PercentSparse    - 100.0])):RESULT_FIELD_SIZE_TIME,
+    IfThen(PercentSparseDyn = 100, '-', Format('%.0n%%', [PercentSparseDyn - 100.0])):RESULT_FIELD_SIZE_TIME
   );
 
   PercentSimple    := 1 + Ord(ATimeSimple    > ATimeSparse) + Ord(ATimeSimple    > ATimeSparseDyn);
