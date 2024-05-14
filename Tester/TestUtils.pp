@@ -105,35 +105,28 @@ begin
   if ATimeSparse    < TimeMin then TimeMin := ATimeSparse;
   if ATimeSparseDyn < TimeMin then TimeMin := ATimeSparseDyn;
 
-  if TimeMin > 0 then
-  begin
-    PercentSimple    := Round(ATimeSimple    * 100 / TimeMin);
-    PercentSparse    := Round(ATimeSparse    * 100 / TimeMin);
-    PercentSparseDyn := Round(ATimeSparseDyn * 100 / TimeMin);
+  if TimeMin = 0 then
+    TimeMin := 1;
 
-    Write(
-      IfThen(PercentSimple    = 100, '-', Format('%.0n%%', [PercentSimple    - 100.0])):RESULT_FIELD_SIZE_TIME,
-      IfThen(PercentSparse    = 100, '-', Format('%.0n%%', [PercentSparse    - 100.0])):RESULT_FIELD_SIZE_TIME,
-      IfThen(PercentSparseDyn = 100, '-', Format('%.0n%%', [PercentSparseDyn - 100.0])):RESULT_FIELD_SIZE_TIME
-    );
+  PercentSimple    := Round(ATimeSimple    * 100 / TimeMin);
+  PercentSparse    := Round(ATimeSparse    * 100 / TimeMin);
+  PercentSparseDyn := Round(ATimeSparseDyn * 100 / TimeMin);
 
-    PercentSimple    := 1 + Ord(ATimeSimple    > ATimeSparse) + Ord(ATimeSimple    > ATimeSparseDyn);
-    PercentSparse    := 1 + Ord(ATimeSparse    > ATimeSimple) + Ord(ATimeSparse    > ATimeSparseDyn);
-    PercentSparseDyn := 1 + Ord(ATimeSparseDyn > ATimeSimple) + Ord(ATimeSparseDyn > ATimeSparse);
+  Write(
+    IfThen(PercentSimple    = 100, '-', Format('%.0n%%', [PercentSimple    - 100.0])):RESULT_FIELD_SIZE_TIME,
+    IfThen(PercentSparse    = 100, '-', Format('%.0n%%', [PercentSparse    - 100.0])):RESULT_FIELD_SIZE_TIME,
+    IfThen(PercentSparseDyn = 100, '-', Format('%.0n%%', [PercentSparseDyn - 100.0])):RESULT_FIELD_SIZE_TIME
+  );
 
-    WriteLn('    ',
-      IfThen(PercentSimple    = 1, '-', PercentSimple.ToString()), ' ',
-      IfThen(PercentSparse    = 1, '-', PercentSparse.ToString()), ' ',
-      IfThen(PercentSparseDyn = 1, '-', PercentSparseDyn.ToString())
-    );
-  end
-  else
-    WriteLn(
-      '-':RESULT_FIELD_SIZE_TIME,
-      '-':RESULT_FIELD_SIZE_TIME,
-      '-':RESULT_FIELD_SIZE_TIME,
-      '    - - -'
-    );
+  PercentSimple    := 1 + Ord(ATimeSimple    > ATimeSparse) + Ord(ATimeSimple    > ATimeSparseDyn);
+  PercentSparse    := 1 + Ord(ATimeSparse    > ATimeSimple) + Ord(ATimeSparse    > ATimeSparseDyn);
+  PercentSparseDyn := 1 + Ord(ATimeSparseDyn > ATimeSimple) + Ord(ATimeSparseDyn > ATimeSparse);
+
+  WriteLn('    ',
+    IfThen(PercentSimple    = 1, '-', PercentSimple.ToString()), ' ',
+    IfThen(PercentSparse    = 1, '-', PercentSparse.ToString()), ' ',
+    IfThen(PercentSparseDyn = 1, '-', PercentSparseDyn.ToString())
+  );
 end;
 
 
