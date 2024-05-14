@@ -163,7 +163,7 @@ begin
   Result := TestGetTicks();
   Node   := AList^.NodeHead;
 
-  while Node <> AList^.NodeTail do
+  while Node <> nil do
   begin
     if PUInt32(@Node^.Data)^ and 1 = 1 then
       Num += 1;
@@ -171,12 +171,15 @@ begin
     Node := Node^.Next;
   end;
 
-  repeat
-    Node := Node^.Prev;
+  Node := AList^.NodeTail;
 
+  while Node <> nil do
+  begin
     if PUInt32(@Node^.Data)^ and 1 = 0 then
       Num -= 1;
-  until Node = AList^.NodeHead;
+
+    Node := Node^.Prev;
+  end;
 
   Result := TestGetTicks() - Result;
 end;
