@@ -93,10 +93,10 @@ end;
 
 procedure TestPrintResult(AName: String; ATimeVector, ATimeSimple, ATimeSparse, ATimeSparseDyn: Int64);
 var
-  PercentVector:    Int32;
-  PercentSimple:    Int32;
-  PercentSparse:    Int32;
-  PercentSparseDyn: Int32;
+  PercentVector:    Int64;
+  PercentSimple:    Int64;
+  PercentSparse:    Int64;
+  PercentSparseDyn: Int64;
   TimeMin:          Int64;
 begin
   Write(
