@@ -10,17 +10,25 @@ The implementation is made in [Free Pascal](https://www.freepascal.org) and uses
 
 The structures representing lists are not opaque, so you can freely traverse them in any direction. The nodes of the actual list are available in the `List.NodeHead` and `List.NodeTail` fields. Remember, however, that every time you need to add a node to the list, create it and attach it to the list with existing functions. If you want to detach an existing node from the list and attach it somewhere else in the list or release it, you should also use the existing functions. This will not only ensure that the list is constructed correctly, but will also ensure that the segment and node counters contain the correct numbers. However, if you know what you're doing and want it, you can manually manage segments, banks, and nodes, and create additional functions to make these lists easier to use. The existing functions are implemented to show how to properly manage segments and nodes.
 
-# [SparseList](Source/SparseList.pp)
+# [Vector](Source/Vector.pp)
 
 When a set of elements is needed in the form of a continuous block of memory, arrays are used, the memory block of which is allocated with a reserve. When the array's allocated memory runs out, it is typically reallocated and its size doubled. When elements are removed from the array, the memory block is not reallocated — its empty space is left for future use when the number of elements in the array increases again. This reduces the amount of memory allocation and relocation required, increasing performance at the expense of slightly higher resource consumption.
 
-A basic sparse list works similarly. When new memory is needed for the list nodes, a segment with a new set of nodes is allocated. When space in a segment runs out (all segment nodes are used in the list), a new segment is allocated and added to the linked list of segments. All its nodes are connected to the bank, which contains a linked list of all unused nodes from all allocated segments. The segment list and the unused node bank are singly-linked lists, used like a stack (LIFO). When a node is removed from the list, it is returned to the bank.
+Vector works exactly like a regular array, with the difference that the memory block of its buffer is not an array type, but a typeless block of memory that can store any type of data, even different types within one vector instance. During initialization, a buffer is allocated for several elements, and when free space runs out, the buffer block is reallocated and its size doubles. This block is never shrunk — its free space is left for the future.
+
+# [SimpleList](Source/ListSimple.pp)
+
+This is an implementation of the classic doubly-linked list. Memory for each node is allocated separately, and when a node is not destroyed, it is simply freed from memory. It does not provide for the allocation of spare node memory or support for caching unused nodes.
+
+# [SparseList](Source/ListSparse.pp)
+
+A basic sparse list works the same as a classic linked list, but memory management is very similar to that used for a vector. When new memory is needed for the list nodes, a segment with a new set of nodes is allocated. When space in a segment runs out (all segment nodes are used in the list), a new segment is allocated and added to the linked list of segments. All its nodes are connected to the bank, which contains a linked list of all unused nodes from all allocated segments. The segment list and the unused node bank are singly-linked lists, used like a stack (LIFO). When a node is removed from the list, it is returned to the bank.
 
 Segments of this list are never deallocated, even if all nodes of a given segment are not used in the list. Once allocated, a segment exists until the list is destroyed, and its nodes either reside in the general bank or are used to build the list. Unused nodes stored in the bank are not sorted in any way.
 
-# [SparseListDyn](Source/SparseListDyn.pp)
+# [SparseListDyn](Source/ListSparseDyn.pp)
 
-The dynamic sparse list works similarly to the basic one, but with the difference that segments whose nodes are all unused are deallocated automatically. To make this possible, each node has a link to the owner segment, and each segment has its own bank of unused nodes. To allow to freely remove unnecessary segments, the segments form a doubly-linked list instead of a singly-linked one. Banks of unused nodes, however, still create singly-linked lists and are used like a stack (LIFO).
+The dynamic sparse list works the same as the basic one, but with the difference that segments whose nodes are all unused are deallocated automatically. To make this possible, each node has a link to the owner segment, and each segment has its own bank of unused nodes. To allow to freely remove unnecessary segments, the segments form a doubly-linked list instead of a singly-linked one. Banks of unused nodes, however, still create singly-linked lists and are used like a stack (LIFO).
 
 Since this list cannot have one bank with all unused nodes from all segments, when creating a new node, all allocated segments are searched linearly. The exception is when there is no segment yet or no segment contains an unused node, in which case a new segment is immediately allocated and its first node is returned. When a node is released, it is returned to the owner segment's bank and if all the nodes of that segment are not in use, the entire segment is released from memory. This helps to minimize resource consumption, but at the cost of slightly increased time complexity.
 
