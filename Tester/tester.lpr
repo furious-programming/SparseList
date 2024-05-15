@@ -40,9 +40,9 @@ uses
   ListSparse,
   ListSparseDyn,
   TestVector,
-  TestSimpleList,
-  TestSparseList,
-  TestSparseListDyn,
+  TestListSimple,
+  TestListSparse,
+  TestListSparseDyn,
   TestUtils;
 label
   TestAgain;
@@ -80,114 +80,114 @@ TestAgain:
 
   TestPrintResult('APPEND',
     TestVectorAppend        (HandleVector,    ListNodeNum),
-    TestSimpleListAppend    (HandleSimple,    ListNodeNum),
-    TestSparseListAppend    (HandleSparse,    ListNodeNum),
-    TestSparseListDynAppend (HandleSparseDyn, ListNodeNum)
+    TestListSimpleAppend    (HandleSimple,    ListNodeNum),
+    TestListSparseAppend    (HandleSparse,    ListNodeNum),
+    TestListSparseDynAppend (HandleSparseDyn, ListNodeNum)
   );
 
   TestPrintResult('TRAVERSE',
     TestVectorTraverse        (HandleVector),
-    TestSimpleListTraverse    (HandleSimple),
-    TestSparseListTraverse    (HandleSparse),
-    TestSparseListDynTraverse (HandleSparseDyn)
+    TestListSimpleTraverse    (HandleSimple),
+    TestListSparseTraverse    (HandleSparse),
+    TestListSparseDynTraverse (HandleSparseDyn)
   );
 
   TestPrintResult('SORT',
     TestVectorSort        (HandleVector),
-    TestSimpleListSort    (HandleSimple),
-    TestSparseListSort    (HandleSparse),
-    TestSparseListDynSort (HandleSparseDyn)
+    TestListSimpleSort    (HandleSimple),
+    TestListSparseSort    (HandleSparse),
+    TestListSparseDynSort (HandleSparseDyn)
   );
 
   TestPrintResult('TRAVERSE',
     TestVectorTraverse        (HandleVector),
-    TestSimpleListTraverse    (HandleSimple),
-    TestSparseListTraverse    (HandleSparse),
-    TestSparseListDynTraverse (HandleSparseDyn)
+    TestListSimpleTraverse    (HandleSimple),
+    TestListSparseTraverse    (HandleSparse),
+    TestListSparseDynTraverse (HandleSparseDyn)
   );
 
   TestPrintResult('CLEAR',
     TestVectorClear        (HandleVector),
-    TestSimpleListClear    (HandleSimple),
-    TestSparseListClear    (HandleSparse),
-    TestSparseListDynClear (HandleSparseDyn)
+    TestListSimpleClear    (HandleSimple),
+    TestListSparseClear    (HandleSparse),
+    TestListSparseDynClear (HandleSparseDyn)
   );
 
   TestPrintResult('APPEND',
     TestVectorAppend        (HandleVector,    ListNodeNum),
-    TestSimpleListAppend    (HandleSimple,    ListNodeNum),
-    TestSparseListAppend    (HandleSparse,    ListNodeNum),
-    TestSparseListDynAppend (HandleSparseDyn, ListNodeNum)
+    TestListSimpleAppend    (HandleSimple,    ListNodeNum),
+    TestListSparseAppend    (HandleSparse,    ListNodeNum),
+    TestListSparseDynAppend (HandleSparseDyn, ListNodeNum)
   );
 
   TestPrintResult('TRAVERSE',
     TestVectorTraverse        (HandleVector),
-    TestSimpleListTraverse    (HandleSimple),
-    TestSparseListTraverse    (HandleSparse),
-    TestSparseListDynTraverse (HandleSparseDyn)
+    TestListSimpleTraverse    (HandleSimple),
+    TestListSparseTraverse    (HandleSparse),
+    TestListSparseDynTraverse (HandleSparseDyn)
   );
 
   TestPrintResult('CHOP',
     TestVectorChop        (HandleVector),
-    TestSimpleListChop    (HandleSimple),
-    TestSparseListChop    (HandleSparse),
-    TestSparseListDynChop (HandleSparseDyn)
+    TestListSimpleChop    (HandleSimple),
+    TestListSparseChop    (HandleSparse),
+    TestListSparseDynChop (HandleSparseDyn)
   );
 
   TestPrintResult('TRAVERSE',          
     TestVectorTraverse        (HandleVector),
-    TestSimpleListTraverse    (HandleSimple),
-    TestSparseListTraverse    (HandleSparse),
-    TestSparseListDynTraverse (HandleSparseDyn)
+    TestListSimpleTraverse    (HandleSimple),
+    TestListSparseTraverse    (HandleSparse),
+    TestListSparseDynTraverse (HandleSparseDyn)
   );
 
   TestPrintResult('INSERT',
     TestVectorInsert        (HandleVector),
-    TestSimpleListInsert    (HandleSimple),
-    TestSparseListInsert    (HandleSparse),
-    TestSparseListDynInsert (HandleSparseDyn)
+    TestListSimpleInsert    (HandleSimple),
+    TestListSparseInsert    (HandleSparse),
+    TestListSparseDynInsert (HandleSparseDyn)
   );
 
   TestPrintResult('TRAVERSE',          
     TestVectorTraverse        (HandleVector),
-    TestSimpleListTraverse    (HandleSimple),
-    TestSparseListTraverse    (HandleSparse),
-    TestSparseListDynTraverse (HandleSparseDyn)
+    TestListSimpleTraverse    (HandleSimple),
+    TestListSparseTraverse    (HandleSparse),
+    TestListSparseDynTraverse (HandleSparseDyn)
   );
 
   TestPrintResult('SORT',
     TestVectorSort        (HandleVector),
-    TestSimpleListSort    (HandleSimple),
-    TestSparseListSort    (HandleSparse),
-    TestSparseListDynSort (HandleSparseDyn)
+    TestListSimpleSort    (HandleSimple),
+    TestListSparseSort    (HandleSparse),
+    TestListSparseDynSort (HandleSparseDyn)
   );
 
   TestPrintResult('TRAVERSE',          
     TestVectorTraverse        (HandleVector),
-    TestSimpleListTraverse    (HandleSimple),
-    TestSparseListTraverse    (HandleSparse),
-    TestSparseListDynTraverse (HandleSparseDyn)
+    TestListSimpleTraverse    (HandleSimple),
+    TestListSparseTraverse    (HandleSparse),
+    TestListSparseDynTraverse (HandleSparseDyn)
   );
 
   TestPrintResult('CHOP',
     TestVectorChop        (HandleVector),
-    TestSimpleListChop    (HandleSimple),
-    TestSparseListChop    (HandleSparse),
-    TestSparseListDynChop (HandleSparseDyn)
+    TestListSimpleChop    (HandleSimple),
+    TestListSparseChop    (HandleSparse),
+    TestListSparseDynChop (HandleSparseDyn)
   );
 
   TestPrintResult('TRAVERSE',          
     TestVectorTraverse        (HandleVector),
-    TestSimpleListTraverse    (HandleSimple),
-    TestSparseListTraverse    (HandleSparse),
-    TestSparseListDynTraverse (HandleSparseDyn)
+    TestListSimpleTraverse    (HandleSimple),
+    TestListSparseTraverse    (HandleSparse),
+    TestListSparseDynTraverse (HandleSparseDyn)
   );
 
   TestPrintResult('DESTROY',
     TestVectorDestroy        (HandleVector),
-    TestSimpleListDestroy    (HandleSimple),
-    TestSparseListDestroy    (HandleSparse),
-    TestSparseListDynDestroy (HandleSparseDyn)
+    TestListSimpleDestroy    (HandleSimple),
+    TestListSparseDestroy    (HandleSparse),
+    TestListSparseDynDestroy (HandleSparseDyn)
   );
 
   TestPrintFooter();

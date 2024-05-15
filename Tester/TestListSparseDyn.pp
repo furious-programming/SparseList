@@ -30,7 +30,7 @@
   For more information, please refer to <http://unlicense.org/>
 }
 
-unit TestSparseListDyn;
+unit TestListSparseDyn;
 
   // Global compiler switches.
   {$INCLUDE TestSwitches.inc}
@@ -41,13 +41,13 @@ uses
   ListSparseDyn;
 
 
-  function TestSparseListDynAppend   (AList: PListSparseDyn; ANodeNum: Int32): Int64;
-  function TestSparseListDynInsert   (AList: PListSparseDyn): Int64;
-  function TestSparseListDynChop     (AList: PListSparseDyn): Int64;
-  function TestSparseListDynSort     (AList: PListSparseDyn): Int64;
-  function TestSparseListDynClear    (AList: PListSparseDyn): Int64;
-  function TestSparseListDynTraverse (AList: PListSparseDyn): Int64;
-  function TestSparseListDynDestroy  (AList: PListSparseDyn): Int64;
+  function TestListSparseDynAppend   (AList: PListSparseDyn; ANodeNum: Int32): Int64;
+  function TestListSparseDynInsert   (AList: PListSparseDyn): Int64;
+  function TestListSparseDynChop     (AList: PListSparseDyn): Int64;
+  function TestListSparseDynSort     (AList: PListSparseDyn): Int64;
+  function TestListSparseDynClear    (AList: PListSparseDyn): Int64;
+  function TestListSparseDynTraverse (AList: PListSparseDyn): Int64;
+  function TestListSparseDynDestroy  (AList: PListSparseDyn): Int64;
 
 
 implementation
@@ -56,7 +56,7 @@ uses
   TestUtils;
 
 
-function TestSparseListDynAppend(AList: PListSparseDyn; ANodeNum: Int32): Int64;
+function TestListSparseDynAppend(AList: PListSparseDyn; ANodeNum: Int32): Int64;
 var
   NodeSeed: UInt32 = $600D5EED;
 begin
@@ -78,7 +78,7 @@ begin
 end;
 
 
-function TestSparseListDynInsert(AList: PListSparseDyn): Int64;
+function TestListSparseDynInsert(AList: PListSparseDyn): Int64;
 var
   NodeNew:    PListSparseDynNode;
   NodeCurr:   PListSparseDynNode;
@@ -110,7 +110,7 @@ begin
 end;
 
 
-function TestSparseListDynChop(AList: PListSparseDyn): Int64;
+function TestListSparseDynChop(AList: PListSparseDyn): Int64;
 var
   Node:     PListSparseDynNode;
   NodeNext: PListSparseDynNode;
@@ -142,7 +142,7 @@ end;
     Result := PUInt32(@ANodeA^.Data)^ > PUInt32(@ANodeB^.Data)^;
   end;
 
-function TestSparseListDynSort(AList: PListSparseDyn): Int64;
+function TestListSparseDynSort(AList: PListSparseDyn): Int64;
 begin
   Result := TestGetTicks();
   ListSparseDynSortBubble(AList, @TestSparseListDynSortNodes);
@@ -150,7 +150,7 @@ begin
 end;
 
 
-function TestSparseListDynClear(AList: PListSparseDyn): Int64;
+function TestListSparseDynClear(AList: PListSparseDyn): Int64;
 begin
   Result := TestGetTicks();
   ListSparseDynClear(AList);
@@ -158,7 +158,7 @@ begin
 end;
 
 
-function TestSparseListDynTraverse(AList: PListSparseDyn): Int64;
+function TestListSparseDynTraverse(AList: PListSparseDyn): Int64;
 var
   Node: PListSparseDynNode;
   Num:  Int32 = 0;
@@ -188,7 +188,7 @@ begin
 end;
 
 
-function TestSparseListDynDestroy(AList: PListSparseDyn): Int64;
+function TestListSparseDynDestroy(AList: PListSparseDyn): Int64;
 begin
   Result := TestGetTicks();
   ListSparseDynDestroy(AList);

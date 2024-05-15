@@ -75,15 +75,15 @@
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="TestSimpleList.pp"/>
+        <Filename Value="TestListSimple.pp"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="TestSparseList.pp"/>
+        <Filename Value="TestListSparse.pp"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="TestSparseListDyn.pp"/>
+        <Filename Value="TestListSparseDyn.pp"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>

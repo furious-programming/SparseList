@@ -1,6 +1,6 @@
 
 {
-  Simple Doubly-linked List Tester.
+  Sparse Doubly-linked List Tester.
   Copyleft © 2024 furious programming. All rights reversed.
   _______________________________________________________________________
 
@@ -30,7 +30,7 @@
   For more information, please refer to <http://unlicense.org/>
 }
 
-unit TestSimpleList;
+unit TestListSparse;
 
   // Global compiler switches.
   {$INCLUDE TestSwitches.inc}
@@ -38,16 +38,16 @@ unit TestSimpleList;
 interface
 
 uses
-  ListSimple;
+  ListSparse;
 
 
-  function TestSimpleListAppend   (AList: PListSimple; ANodeNum: Int32): Int64;
-  function TestSimpleListInsert   (AList: PListSimple): Int64;
-  function TestSimpleListChop     (AList: PListSimple): Int64;
-  function TestSimpleListSort     (AList: PListSimple): Int64;
-  function TestSimpleListClear    (AList: PListSimple): Int64;
-  function TestSimpleListTraverse (AList: PListSimple): Int64;
-  function TestSimpleListDestroy  (AList: PListSimple): Int64;
+  function TestListSparseAppend   (AList: PListSparse; ANodeNum: Int32): Int64;
+  function TestListSparseInsert   (AList: PListSparse): Int64;
+  function TestListSparseChop     (AList: PListSparse): Int64;
+  function TestListSparseSort     (AList: PListSparse): Int64;
+  function TestListSparseClear    (AList: PListSparse): Int64;
+  function TestListSparseTraverse (AList: PListSparse): Int64;
+  function TestListSparseDestroy  (AList: PListSparse): Int64;
 
 
 implementation
@@ -56,7 +56,7 @@ uses
   TestUtils;
 
 
-function TestSimpleListAppend(AList: PListSimple; ANodeNum: Int32): Int64;
+function TestListSparseAppend(AList: PListSparse; ANodeNum: Int32): Int64;
 var
   NodeSeed: UInt32 = $600D5EED;
 begin
@@ -64,7 +64,7 @@ begin
 
   while ANodeNum > 0 do
   begin
-    ListSimpleNodeAppend(AList, ListSimpleNodeCreate(AList));
+    ListSparseNodeAppend(AList, ListSparseNodeCreate(AList));
     PUInt32(@AList^.NodeTail^.Data)^ := NodeSeed;
 
     NodeSeed := NodeSeed xor (NodeSeed shl 13);
@@ -78,10 +78,10 @@ begin
 end;
 
 
-function TestSimpleListInsert(AList: PListSimple): Int64;
+function TestListSparseInsert(AList: PListSparse): Int64;
 var
-  NodeNew:    PListSimpleNode;
-  NodeCurr:   PListSimpleNode;
+  NodeNew:    PListSparseNode;
+  NodeCurr:   PListSparseNode;
   NodeInsert: Int32  = 0;
   NodeSeed:   UInt32 = $BAD5EED;
 begin
@@ -92,10 +92,10 @@ begin
   begin
     if NodeInsert = 0 then
     begin
-      NodeNew := ListSimpleNodeCreate(AList);
+      NodeNew := ListSparseNodeCreate(AList);
       PUInt32(@NodeNew^.Data)^ := NodeSeed;
 
-      ListSimpleNodeInsert(AList, NodeNew, NodeCurr);
+      ListSparseNodeInsert(AList, NodeNew, NodeCurr);
     end;
 
     NodeSeed := NodeSeed xor (NodeSeed shl 13);
@@ -106,14 +106,14 @@ begin
     NodeInsert := (NodeInsert + 1) and %11;
   end;
 
-  Result := TestGetTicks() - Result;
+  Result := TestGetTicks - Result;
 end;
 
 
-function TestSimpleListChop(AList: PListSimple): Int64;
+function TestListSparseChop(AList: PListSparse): Int64;
 var
-  Node:     PListSimpleNode;
-  NodeNext: PListSimpleNode;
+  Node:     PListSparseNode;
+  NodeNext: PListSparseNode;
   NodeChop: Int32 = 0;
 begin
   Result := TestGetTicks();
@@ -125,42 +125,42 @@ begin
 
     if NodeChop = 0 then
     begin
-      ListSimpleNodeExtract(AList, Node);
-      ListSimpleNodeDestroy(AList, Node);
+      ListSparseNodeExtract(AList, Node);
+      ListSparseNodeDestroy(AList, Node);
     end;
 
     Node     := NodeNext;
     NodeChop := (NodeChop + 1) and %11;
   end;
 
-  Result := TestGetTicks() - Result;
+  Result := TestGetTicks - Result;
 end;
 
 
-  function TestSimpleListSortNodes(ANodeA, ANodeB: PListSimpleNode): Boolean;
+  function TestSparseListSortNodes(ANodeA, ANodeB: PListSparseNode): Boolean;
   begin
     Result := PUInt32(@ANodeA^.Data)^ > PUInt32(@ANodeB^.Data)^;
   end;
 
-function TestSimpleListSort(AList: PListSimple): Int64;
+function TestListSparseSort(AList: PListSparse): Int64;
 begin
   Result := TestGetTicks();
-  ListSimpleSortBubble(AList, @TestSimpleListSortNodes);
+  ListSparseSortBubble(AList, @TestSparseListSortNodes);
   Result := TestGetTicks() - Result;
 end;
 
 
-function TestSimpleListClear(AList: PListSimple): Int64;
+function TestListSparseClear(AList: PListSparse): Int64;
 begin
   Result := TestGetTicks();
-  ListSimpleClear(AList);
+  ListSparseClear(AList);
   Result := TestGetTicks() - Result;
 end;
 
 
-function TestSimpleListTraverse(AList: PListSimple): Int64;
+function TestListSparseTraverse(AList: PListSparse): Int64;
 var
-  Node: PListSimpleNode;
+  Node: PListSparseNode;
   Num:  Int32 = 0;
 begin
   Result := TestGetTicks();
@@ -188,10 +188,10 @@ begin
 end;
 
 
-function TestSimpleListDestroy(AList: PListSimple): Int64;
+function TestListSparseDestroy(AList: PListSparse): Int64;
 begin
   Result := TestGetTicks();
-  ListSimpleDestroy(AList);
+  ListSparseDestroy(AList);
   Result := TestGetTicks() - Result;
 end;
 
