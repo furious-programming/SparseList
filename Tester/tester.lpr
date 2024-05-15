@@ -35,6 +35,7 @@
 
 uses
   Math,
+  Vector,
   SimpleList,
   SparseList,
   SparseListDyn,
