@@ -74,7 +74,7 @@ begin
     ANodeNum -= 1;
   end;
 
-  Result := TestGetTicks - Result;
+  Result := TestGetTicks() - Result;
 end;
 
 
@@ -106,7 +106,7 @@ begin
     NodeInsert := (NodeInsert + 1) and %11;
   end;
 
-  Result := TestGetTicks - Result;
+  Result := TestGetTicks() - Result;
 end;
 
 
@@ -133,7 +133,7 @@ begin
     NodeChop := (NodeChop + 1) and %11;
   end;
 
-  Result := TestGetTicks - Result;
+  Result := TestGetTicks() - Result;
 end;
 
 
