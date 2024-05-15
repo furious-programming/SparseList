@@ -69,7 +69,7 @@ type
   // Sorting the vector.
   procedure VectorSortBubble (AVector: PVector; ACallback: TVectorCallbackCompare); // Performs bubble sorting on the vector.
 
-  // Managint the vector items.
+  // Managing the vector items.
   procedure VectorDataAppend (AVector: PVector; AData: Pointer); // Adds an item to the end of the vector.
   procedure VectorDataInsert (AVector: PVector; AData: Pointer; AIndex: Int32); // Inserts an item into a given place in the vector.
   procedure VectorDataDelete (AVector: PVector; AIndex: Int32); // Removes an item with a given index from the vector.
