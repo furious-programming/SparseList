@@ -64,8 +64,8 @@ TestAgain:
   Write('Enter the number of nodes per segment:       ');
   ReadLn(ListNodeNumSegment);
 
-  ListNodeNum        := EnsureRange(ListNodeNum, 1, 1024 * 1024);
-  ListNodeNumSegment := EnsureRange(ListNodeNumSegment, 1, 8192);
+  ListNodeNum        := EnsureRange(ListNodeNum,        1, 512 * 1024);
+  ListNodeNumSegment := EnsureRange(ListNodeNumSegment, 1,       8192);
 
   WriteLn();
   WriteLn('Staring test for ', ListNodeNum, ' nodes and ', ListNodeNumSegment, ' nodes per segment...');
