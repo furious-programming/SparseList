@@ -41,7 +41,7 @@ uses
   SparseListDyn;
 
 
-  function TestSparseListDynAppend   (AList: PSparseListDyn; ANodeNum: Integer): Int64;
+  function TestSparseListDynAppend   (AList: PSparseListDyn; ANodeNum: Int32): Int64;
   function TestSparseListDynInsert   (AList: PSparseListDyn): Int64;
   function TestSparseListDynChop     (AList: PSparseListDyn): Int64;
   function TestSparseListDynSort     (AList: PSparseListDyn): Int64;
@@ -56,7 +56,7 @@ uses
   TestUtils;
 
 
-function TestSparseListDynAppend(AList: PSparseListDyn; ANodeNum: Integer): Int64;
+function TestSparseListDynAppend(AList: PSparseListDyn; ANodeNum: Int32): Int64;
 var
   NodeSeed: UInt32 = $600D5EED;
 begin
@@ -82,8 +82,8 @@ function TestSparseListDynInsert(AList: PSparseListDyn): Int64;
 var
   NodeNew:    PSparseListDynNode;
   NodeCurr:   PSparseListDynNode;
-  NodeInsert: Integer = 0;
-  NodeSeed:   UInt32  = $BAD5EED;
+  NodeInsert: Int32  = 0;
+  NodeSeed:   UInt32 = $BAD5EED;
 begin
   Result   := TestGetTicks();
   NodeCurr := AList^.NodeHead;
@@ -114,7 +114,7 @@ function TestSparseListDynChop(AList: PSparseListDyn): Int64;
 var
   Node:     PSparseListDynNode;
   NodeNext: PSparseListDynNode;
-  NodeChop: Integer = 0;
+  NodeChop: Int32 = 0;
 begin
   Result := TestGetTicks();
   Node   := AList^.NodeHead;
@@ -161,7 +161,7 @@ end;
 function TestSparseListDynTraverse(AList: PSparseListDyn): Int64;
 var
   Node: PSparseListDynNode;
-  Num:  Integer = 0;
+  Num:  Int32 = 0;
 begin
   Result := TestGetTicks();
   Node   := AList^.NodeHead;

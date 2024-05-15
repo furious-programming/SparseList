@@ -91,10 +91,10 @@ end;
 
 procedure TestPrintResult(AName: String; ATimeSimple, ATimeSparse, ATimeSparseDyn: Int64);
 var
-  PercentSimple:    Integer;
-  PercentSparse:    Integer;
-  PercentSparseDyn: Integer;
-  TimeMin:          Integer;
+  PercentSimple:    Int32;
+  PercentSparse:    Int32;
+  PercentSparseDyn: Int32;
+  TimeMin:          Int64;
 begin
   Write(
     AName:RESULT_FIELD_SIZE_NAME,

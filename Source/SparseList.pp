@@ -63,10 +63,10 @@ type
     BankHead:       PSparseListNode;    // A pointer to the first unused node (head of a singly-linked list of nodes).
     NodeHead:       PSparseListNode;    // A pointer to the first list node.
     NodeTail:       PSparseListNode;    // A pointer to the last list node.
-    NodeNum:        Integer;            // The number of all list nodes.
-    NodeNumSegment: Integer;            // The number of nodes on each segment.
-    SizeData:       Integer;            // The data size of each node, in bytes.
-    SizeNode:       Integer;            // The size of a single node, in bytes.
+    NodeNum:        Int32;              // The number of all list nodes.
+    NodeNumSegment: Int32;              // The number of nodes on each segment.
+    SizeData:       Int32;              // The data size of each node, in bytes.
+    SizeNode:       Int32;              // The size of a single node, in bytes.
   end;
 
 type
@@ -75,11 +75,11 @@ type
 
 
   // Allocating and deallocating a list.
-  function  SparseListCreate      (ASizeData, ANodeNumSegment: Integer): PSparseList; // Allocates a new list on the heap and initializes it.
+  function  SparseListCreate      (ASizeData, ANodeNumSegment: Int32): PSparseList; // Allocates a new list on the heap and initializes it.
   procedure SparseListDestroy     (AList: PSparseList); // Finalizes and deallocates the list from the heap.
 
   // Initializing and finalizing a list.
-  procedure SparseListInitialize  (AList: PSparseList; ASizeData, ANodeNumSegment: Integer); // Initializes an existing list.
+  procedure SparseListInitialize  (AList: PSparseList; ASizeData, ANodeNumSegment: Int32); // Initializes an existing list.
   procedure SparseListFinalize    (AList: PSparseList); // Finalizes an existing list.
 
   // Clearing the list.
@@ -111,7 +111,7 @@ implementation
   Result:
     • A non-nil pointer to an allocated and initialized list.
 }
-function SparseListCreate(ASizeData, ANodeNumSegment: Integer): PSparseList;
+function SparseListCreate(ASizeData, ANodeNumSegment: Int32): PSparseList;
 begin
   Result := GetMem(SizeOf(TSparseList));
   SparseListInitialize(Result, ASizeData, ANodeNumSegment);
@@ -147,7 +147,7 @@ end;
     • ASizeData       — the size of the data in each node in bytes, in range [1,n].
     • ANodeNumSegment — the number of nodes on each segment, in range [1,n].
 }
-procedure SparseListInitialize(AList: PSparseList; ASizeData, ANodeNumSegment: Integer);
+procedure SparseListInitialize(AList: PSparseList; ASizeData, ANodeNumSegment: Int32);
 begin
   AList^.SegmentHead    := nil;
   AList^.BankHead       := nil;

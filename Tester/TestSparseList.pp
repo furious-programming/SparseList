@@ -41,7 +41,7 @@ uses
   SparseList;
 
 
-  function TestSparseListAppend   (AList: PSparseList; ANodeNum: Integer): Int64;
+  function TestSparseListAppend   (AList: PSparseList; ANodeNum: Int32): Int64;
   function TestSparseListInsert   (AList: PSparseList): Int64;
   function TestSparseListChop     (AList: PSparseList): Int64;
   function TestSparseListSort     (AList: PSparseList): Int64;
@@ -56,7 +56,7 @@ uses
   TestUtils;
 
 
-function TestSparseListAppend(AList: PSparseList; ANodeNum: Integer): Int64;
+function TestSparseListAppend(AList: PSparseList; ANodeNum: Int32): Int64;
 var
   NodeSeed: UInt32 = $600D5EED;
 begin
@@ -82,8 +82,8 @@ function TestSparseListInsert(AList: PSparseList): Int64;
 var
   NodeNew:    PSparseListNode;
   NodeCurr:   PSparseListNode;
-  NodeInsert: Integer = 0;
-  NodeSeed:   UInt32  = $BAD5EED;
+  NodeInsert: Int32  = 0;
+  NodeSeed:   UInt32 = $BAD5EED;
 begin
   Result   := TestGetTicks();
   NodeCurr := AList^.NodeHead;
@@ -114,7 +114,7 @@ function TestSparseListChop(AList: PSparseList): Int64;
 var
   Node:     PSparseListNode;
   NodeNext: PSparseListNode;
-  NodeChop: Integer = 0;
+  NodeChop: Int32 = 0;
 begin
   Result := TestGetTicks();
   Node   := AList^.NodeHead;
@@ -161,7 +161,7 @@ end;
 function TestSparseListTraverse(AList: PSparseList): Int64;
 var
   Node: PSparseListNode;
-  Num:  Integer = 0;
+  Num:  Int32 = 0;
 begin
   Result := TestGetTicks();
   Node   := AList^.NodeHead;

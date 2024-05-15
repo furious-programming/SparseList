@@ -49,8 +49,8 @@ var
   ListSparse:    PSparseList;
   ListSparseDyn: PSparseListDyn;
 var
-  ListNodeNum:        Integer;
-  ListNodeNumSegment: Integer;
+  ListNodeNum:        Int32;
+  ListNodeNumSegment: Int32;
 begin
 TestAgain:
   Write('Enter the total number of nodes (0 to exit): ');

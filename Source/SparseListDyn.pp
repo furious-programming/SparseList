@@ -51,7 +51,7 @@ type
     BankPrev: PSparseListDynSegment; // A pointer to the previous segment with unused nodes.
     BankNext: PSparseListDynSegment; // A pointer to the next segment with unused nodes.
     BankHead: PSparseListDynNode;    // A pointer to the first unused node of the segment (head of a singly-linked list of nodes).
-    UsedNum:  Integer;               // The number of all segment nodes currently in use.
+    UsedNum:  Int32;                 // The number of all segment nodes currently in use.
     Data:     record end;            // The beginning of the segment nodes' memory block (has name, address and zero-size).
   end;
 
@@ -68,13 +68,13 @@ type
     SegmentBankHead: PSparseListDynSegment; // A pointer to the first segment with unused node.
     SegmentHead:     PSparseListDynSegment; // A pointer to the first segment node.
     SegmentTail:     PSparseListDynSegment; // A pointer to the last segment node.
-    SegmentNum:      Integer;               // The number of all currently allocated segments.
+    SegmentNum:      Int32;                 // The number of all currently allocated segments.
     NodeHead:        PSparseListDynNode;    // A pointer to the first list node.
     NodeTail:        PSparseListDynNode;    // A pointer to the last list node.
-    NodeNum:         Integer;               // The number of all list nodes.
-    NodeNumSegment:  Integer;               // The number of nodes on each segment.
-    SizeData:        Integer;               // The data size of each node, in bytes.
-    SizeNode:        Integer;               // The size of a single node, in bytes.
+    NodeNum:         Int32;                 // The number of all list nodes.
+    NodeNumSegment:  Int32;                 // The number of nodes on each segment.
+    SizeData:        Int32;                 // The data size of each node, in bytes.
+    SizeNode:        Int32;                 // The size of a single node, in bytes.
   end;
 
 type
@@ -83,11 +83,11 @@ type
 
 
   // Allocating and deallocating a list.
-  function  SparseListDynCreate      (ASizeData, ANodeNumSegment: Integer): PSparseListDyn; // Allocates a new list on the heap and initializes it.
+  function  SparseListDynCreate      (ASizeData, ANodeNumSegment: Int32): PSparseListDyn; // Allocates a new list on the heap and initializes it.
   procedure SparseListDynDestroy     (AList: PSparseListDyn); // Finalizes and deallocates the list from the heap.
 
   // Initializing and finalizing a list.
-  procedure SparseListDynInitialize  (AList: PSparseListDyn; ASizeData, ANodeNumSegment: Integer); // Initializes an existing list.
+  procedure SparseListDynInitialize  (AList: PSparseListDyn; ASizeData, ANodeNumSegment: Int32); // Initializes an existing list.
   procedure SparseListDynFinalize    (AList: PSparseListDyn); // Finalizes an existing list.
 
   // Clearing the list.
@@ -124,7 +124,7 @@ implementation
   Result:
     • A non-nil pointer to an allocated and initialized list.
 }
-function SparseListDynCreate(ASizeData, ANodeNumSegment: Integer): PSparseListDyn;
+function SparseListDynCreate(ASizeData, ANodeNumSegment: Int32): PSparseListDyn;
 begin
   Result := GetMem(SizeOf(TSparseListDyn));
   SparseListDynInitialize(Result, ASizeData, ANodeNumSegment);
@@ -160,7 +160,7 @@ end;
     • ASizeData       — the size of the data in each node in bytes, in range [1,n].
     • ANodeNumSegment — the number of nodes on each segment, in range [1,n].
 }
-procedure SparseListDynInitialize(AList: PSparseListDyn; ASizeData, ANodeNumSegment: Integer);
+procedure SparseListDynInitialize(AList: PSparseListDyn; ASizeData, ANodeNumSegment: Int32);
 begin
   AList^.SegmentBankHead := nil;
   AList^.SegmentHead     := nil;

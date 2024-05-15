@@ -41,7 +41,7 @@ uses
   SimpleList;
 
 
-  function TestSimpleListAppend   (AList: PSimpleList; ANodeNum: Integer): Int64;
+  function TestSimpleListAppend   (AList: PSimpleList; ANodeNum: Int32): Int64;
   function TestSimpleListInsert   (AList: PSimpleList): Int64;
   function TestSimpleListChop     (AList: PSimpleList): Int64;
   function TestSimpleListSort     (AList: PSimpleList): Int64;
@@ -56,7 +56,7 @@ uses
   TestUtils;
 
 
-function TestSimpleListAppend(AList: PSimpleList; ANodeNum: Integer): Int64;
+function TestSimpleListAppend(AList: PSimpleList; ANodeNum: Int32): Int64;
 var
   NodeSeed: UInt32 = $600D5EED;
 begin
@@ -82,8 +82,8 @@ function TestSimpleListInsert(AList: PSimpleList): Int64;
 var
   NodeNew:    PSimpleListNode;
   NodeCurr:   PSimpleListNode;
-  NodeInsert: Integer = 0;
-  NodeSeed:   UInt32  = $BAD5EED;
+  NodeInsert: Int32  = 0;
+  NodeSeed:   UInt32 = $BAD5EED;
 begin
   Result   := TestGetTicks();
   NodeCurr := AList^.NodeHead;
@@ -114,7 +114,7 @@ function TestSimpleListChop(AList: PSimpleList): Int64;
 var
   Node:     PSimpleListNode;
   NodeNext: PSimpleListNode;
-  NodeChop: Integer = 0;
+  NodeChop: Int32 = 0;
 begin
   Result := TestGetTicks();
   Node   := AList^.NodeHead;
@@ -161,7 +161,7 @@ end;
 function TestSimpleListTraverse(AList: PSimpleList): Int64;
 var
   Node: PSimpleListNode;
-  Num:  Integer = 0;
+  Num:  Int32 = 0;
 begin
   Result := TestGetTicks();
   Node   := AList^.NodeHead;

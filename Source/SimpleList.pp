@@ -54,8 +54,8 @@ type
   TSimpleList = record
     NodeHead: PSimpleListNode; // A pointer to the first list node.
     NodeTail: PSimpleListNode; // A pointer to the last list node.
-    NodeNum:  Integer;         // The number of all list nodes.
-    SizeData: Integer;         // The data size of each node, in bytes.
+    NodeNum:  Int32;           // The number of all list nodes.
+    SizeData: Int32;           // The data size of each node, in bytes.
   end;
 
 type
@@ -64,11 +64,11 @@ type
 
 
   // Allocating and deallocating a list.
-  function  SimpleListCreate      (ASizeData: Integer): PSimpleList; // Allocates a new list on the heap and initializes it.
+  function  SimpleListCreate      (ASizeData: Int32): PSimpleList; // Allocates a new list on the heap and initializes it.
   procedure SimpleListDestroy     (AList: PSimpleList); // Finalizes and deallocates the list from the heap.
 
   // Initializing and finalizing a list.
-  procedure SimpleListInitialize  (AList: PSimpleList; ASizeData: Integer); // Initializes an existing list.
+  procedure SimpleListInitialize  (AList: PSimpleList; ASizeData: Int32); // Initializes an existing list.
   procedure SimpleListFinalize    (AList: PSimpleList); // Finalizes an existing list.
 
   // Clearing the list.
@@ -99,7 +99,7 @@ implementation
   Result:
     • A non-nil pointer to an allocated and initialized list.
 }
-function SimpleListCreate(ASizeData: Integer): PSimpleList;
+function SimpleListCreate(ASizeData: Int32): PSimpleList;
 begin
   Result := GetMem(SizeOf(TSimpleList));
   SimpleListInitialize(Result, ASizeData);
@@ -130,7 +130,7 @@ end;
     • AList     — a pointer to the structure of the list to initialize.
     • ASizeData — the size of the data in each node in bytes, in range [1,n].
 }
-procedure SimpleListInitialize(AList: PSimpleList; ASizeData: Integer);
+procedure SimpleListInitialize(AList: PSimpleList; ASizeData: Int32);
 begin
   AList^.NodeHead := nil;
   AList^.NodeTail := nil;
