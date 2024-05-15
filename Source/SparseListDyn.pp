@@ -247,9 +247,9 @@ end;
 }
 procedure SparseListDynSortBubble(AList: PSparseListDyn; ACallback: TSparseListDynNodeCallbackCompare);
 var
-  NodeLast: PSparseListDynNode;
-  NodeCurr: PSparseListDynNode;
-  NodeData: Pointer;
+  NodeLast:    PSparseListDynNode;
+  NodeCurr:    PSparseListDynNode;
+  NodeData:    Pointer;
   NodeSwapped: Boolean;
 begin
   // If there are not at least two nodes, there is nothing to sort.
