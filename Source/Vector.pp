@@ -125,7 +125,7 @@ end;
 }
 procedure VectorInitialize(AVector: PVector; ASizeData: Int32);
 const
-  // The initial capacity must be positive and should be a power of two.
+  // The initial capacity must be a power of two and not less than "2".
   VECTOR_CAPACITY_DEFAULT = 16;
 begin
   AVector^.Data     := GetMem(VECTOR_CAPACITY_DEFAULT * ASizeData);
