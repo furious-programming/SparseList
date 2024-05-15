@@ -32,6 +32,9 @@
 
 unit TestUtils;
 
+  // Global compiler switches.
+  {$INCLUDE TestSwitches.inc}
+
 interface
 
 

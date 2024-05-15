@@ -32,6 +32,9 @@
 
 unit TestSimpleList;
 
+  // Global compiler switches.
+  {$INCLUDE TestSwitches.inc}
+
 interface
 
 uses

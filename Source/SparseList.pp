@@ -32,6 +32,9 @@
 
 unit SparseList;
 
+  // Global compiler switches.
+  {$INCLUDE TestSwitches.inc}
+
 interface
 
 

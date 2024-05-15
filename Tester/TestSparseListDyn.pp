@@ -32,6 +32,9 @@
 
 unit TestSparseListDyn;
 
+  // Global compiler switches.
+  {$INCLUDE TestSwitches.inc}
+
 interface
 
 uses

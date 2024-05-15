@@ -30,7 +30,9 @@
   For more information, please refer to <http://unlicense.org/>
 }
 
-program tester;
+// Global compiler switches.
+{$INCLUDE TestSwitches.inc}
+
 uses
   Math,
   SimpleList,
