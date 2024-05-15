@@ -38,16 +38,16 @@ unit TestSimpleList;
 interface
 
 uses
-  SimpleList;
+  ListSimple;
 
 
-  function TestSimpleListAppend   (AList: PSimpleList; ANodeNum: Int32): Int64;
-  function TestSimpleListInsert   (AList: PSimpleList): Int64;
-  function TestSimpleListChop     (AList: PSimpleList): Int64;
-  function TestSimpleListSort     (AList: PSimpleList): Int64;
-  function TestSimpleListClear    (AList: PSimpleList): Int64;
-  function TestSimpleListTraverse (AList: PSimpleList): Int64;
-  function TestSimpleListDestroy  (AList: PSimpleList): Int64;
+  function TestSimpleListAppend   (AList: PListSimple; ANodeNum: Int32): Int64;
+  function TestSimpleListInsert   (AList: PListSimple): Int64;
+  function TestSimpleListChop     (AList: PListSimple): Int64;
+  function TestSimpleListSort     (AList: PListSimple): Int64;
+  function TestSimpleListClear    (AList: PListSimple): Int64;
+  function TestSimpleListTraverse (AList: PListSimple): Int64;
+  function TestSimpleListDestroy  (AList: PListSimple): Int64;
 
 
 implementation
@@ -56,7 +56,7 @@ uses
   TestUtils;
 
 
-function TestSimpleListAppend(AList: PSimpleList; ANodeNum: Int32): Int64;
+function TestSimpleListAppend(AList: PListSimple; ANodeNum: Int32): Int64;
 var
   NodeSeed: UInt32 = $600D5EED;
 begin
@@ -64,7 +64,7 @@ begin
 
   while ANodeNum > 0 do
   begin
-    SimpleListNodeAppend(AList, SimpleListNodeCreate(AList));
+    ListSimpleNodeAppend(AList, ListSimpleNodeCreate(AList));
     PUInt32(@AList^.NodeTail^.Data)^ := NodeSeed;
 
     NodeSeed := NodeSeed xor (NodeSeed shl 13);
@@ -78,10 +78,10 @@ begin
 end;
 
 
-function TestSimpleListInsert(AList: PSimpleList): Int64;
+function TestSimpleListInsert(AList: PListSimple): Int64;
 var
-  NodeNew:    PSimpleListNode;
-  NodeCurr:   PSimpleListNode;
+  NodeNew:    PListSimpleNode;
+  NodeCurr:   PListSimpleNode;
   NodeInsert: Int32  = 0;
   NodeSeed:   UInt32 = $BAD5EED;
 begin
@@ -92,10 +92,10 @@ begin
   begin
     if NodeInsert = 0 then
     begin
-      NodeNew := SimpleListNodeCreate(AList);
+      NodeNew := ListSimpleNodeCreate(AList);
       PUInt32(@NodeNew^.Data)^ := NodeSeed;
 
-      SimpleListNodeInsert(AList, NodeNew, NodeCurr);
+      ListSimpleNodeInsert(AList, NodeNew, NodeCurr);
     end;
 
     NodeSeed := NodeSeed xor (NodeSeed shl 13);
@@ -110,10 +110,10 @@ begin
 end;
 
 
-function TestSimpleListChop(AList: PSimpleList): Int64;
+function TestSimpleListChop(AList: PListSimple): Int64;
 var
-  Node:     PSimpleListNode;
-  NodeNext: PSimpleListNode;
+  Node:     PListSimpleNode;
+  NodeNext: PListSimpleNode;
   NodeChop: Int32 = 0;
 begin
   Result := TestGetTicks();
@@ -125,8 +125,8 @@ begin
 
     if NodeChop = 0 then
     begin
-      SimpleListNodeExtract(AList, Node);
-      SimpleListNodeDestroy(AList, Node);
+      ListSimpleNodeExtract(AList, Node);
+      ListSimpleNodeDestroy(AList, Node);
     end;
 
     Node     := NodeNext;
@@ -137,30 +137,30 @@ begin
 end;
 
 
-  function TestSimpleListSortNodes(ANodeA, ANodeB: PSimpleListNode): Boolean;
+  function TestSimpleListSortNodes(ANodeA, ANodeB: PListSimpleNode): Boolean;
   begin
     Result := PUInt32(@ANodeA^.Data)^ > PUInt32(@ANodeB^.Data)^;
   end;
 
-function TestSimpleListSort(AList: PSimpleList): Int64;
+function TestSimpleListSort(AList: PListSimple): Int64;
 begin
   Result := TestGetTicks();
-  SimpleListSortBubble(AList, @TestSimpleListSortNodes);
+  ListSimpleSortBubble(AList, @TestSimpleListSortNodes);
   Result := TestGetTicks() - Result;
 end;
 
 
-function TestSimpleListClear(AList: PSimpleList): Int64;
+function TestSimpleListClear(AList: PListSimple): Int64;
 begin
   Result := TestGetTicks();
-  SimpleListClear(AList);
+  ListSimpleClear(AList);
   Result := TestGetTicks() - Result;
 end;
 
 
-function TestSimpleListTraverse(AList: PSimpleList): Int64;
+function TestSimpleListTraverse(AList: PListSimple): Int64;
 var
-  Node: PSimpleListNode;
+  Node: PListSimpleNode;
   Num:  Int32 = 0;
 begin
   Result := TestGetTicks();
@@ -188,10 +188,10 @@ begin
 end;
 
 
-function TestSimpleListDestroy(AList: PSimpleList): Int64;
+function TestSimpleListDestroy(AList: PListSimple): Int64;
 begin
   Result := TestGetTicks();
-  SimpleListDestroy(AList);
+  ListSimpleDestroy(AList);
   Result := TestGetTicks() - Result;
 end;
 

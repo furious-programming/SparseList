@@ -30,7 +30,7 @@
   For more information, please refer to <http://unlicense.org/>
 }
 
-unit SparseList;
+unit ListSparse;
 
   // Global compiler switches.
   {$INCLUDE TestSwitches.inc}
@@ -40,29 +40,29 @@ interface
 
 type
   // Typed pointer data types.
-  PSparseListSegment = ^TSparseListSegment; // A pointer to the segment node.
-  PSparseListNode    = ^TSparseListNode;    // A pointer to the list node.
-  PSparseList        = ^TSparseList;        // A pointer to the list structure.
+  PListSparseSegment = ^TListSparseSegment; // A pointer to the segment node.
+  PListSparseNode    = ^TListSparseNode;    // A pointer to the list node.
+  PListSparse        = ^TListSparse;        // A pointer to the list structure.
 
   // A structure of a segment node.
-  TSparseListSegment = record
-    Next: PSparseListSegment; // A pointer to the next segment node.
+  TListSparseSegment = record
+    Next: PListSparseSegment; // A pointer to the next segment node.
     Data: record end;         // The beginning of the segment nodes' memory block (has name, address and zero-size).
   end;
 
   // A structure of a list node.
-  TSparseListNode = record
-    Prev: PSparseListNode; // A pointer to the previous node.
-    Next: PSparseListNode; // A pointer to the next node.
+  TListSparseNode = record
+    Prev: PListSparseNode; // A pointer to the previous node.
+    Next: PListSparseNode; // A pointer to the next node.
     Data: record end;      // The beginning of the node's data memory block (has name, address and zero-size).
   end;
 
   // A structure of the list.
-  TSparseList = record
-    SegmentHead:    PSparseListSegment; // A pointer to the first segment node.
-    BankHead:       PSparseListNode;    // A pointer to the first unused node (head of a singly-linked list of nodes).
-    NodeHead:       PSparseListNode;    // A pointer to the first list node.
-    NodeTail:       PSparseListNode;    // A pointer to the last list node.
+  TListSparse = record
+    SegmentHead:    PListSparseSegment; // A pointer to the first segment node.
+    BankHead:       PListSparseNode;    // A pointer to the first unused node (head of a singly-linked list of nodes).
+    NodeHead:       PListSparseNode;    // A pointer to the first list node.
+    NodeTail:       PListSparseNode;    // A pointer to the last list node.
     NodeNum:        Int32;              // The number of all list nodes.
     NodeNumSegment: Int32;              // The number of nodes on each segment.
     SizeData:       Int32;              // The data size of each node, in bytes.
@@ -71,29 +71,29 @@ type
 
 type
   // Callback comparing data of two nodes, for the purpose of sorting the list.
-  TSparseListNodeCallbackCompare = function (ANodeA, ANodeB: PSparseListNode): Boolean;
+  TListSparseNodeCallbackCompare = function (ANodeA, ANodeB: PListSparseNode): Boolean;
 
 
   // Allocating and deallocating a list.
-  function  SparseListCreate      (ASizeData, ANodeNumSegment: Int32): PSparseList; // Allocates a new list on the heap and initializes it.
-  procedure SparseListDestroy     (AList: PSparseList); // Finalizes and deallocates the list from the heap.
+  function  ListSparseCreate      (ASizeData, ANodeNumSegment: Int32): PListSparse; // Allocates a new list on the heap and initializes it.
+  procedure ListSparseDestroy     (AList: PListSparse); // Finalizes and deallocates the list from the heap.
 
   // Initializing and finalizing a list.
-  procedure SparseListInitialize  (AList: PSparseList; ASizeData, ANodeNumSegment: Int32); // Initializes an existing list.
-  procedure SparseListFinalize    (AList: PSparseList); // Finalizes an existing list.
+  procedure ListSparseInitialize  (AList: PListSparse; ASizeData, ANodeNumSegment: Int32); // Initializes an existing list.
+  procedure ListSparseFinalize    (AList: PListSparse); // Finalizes an existing list.
 
   // Clearing the list.
-  procedure SparseListClear       (AList: PSparseList); // Removes all nodes of the list.
+  procedure ListSparseClear       (AList: PListSparse); // Removes all nodes of the list.
 
   // Sorting the list.
-  procedure SparseListSortBubble  (AList: PSparseList; ACallback: TSparseListNodeCallbackCompare); // Performs bubble sorting on the list.
+  procedure ListSparseSortBubble  (AList: PListSparse; ACallback: TListSparseNodeCallbackCompare); // Performs bubble sorting on the list.
 
   // Creating, destroying and managing nodes.
-  function  SparseListNodeCreate  (AList: PSparseList): PSparseListNode; // Creates a new list node and returns it.
-  procedure SparseListNodeDestroy (AList: PSparseList; ANode: PSparseListNode); // Removes a node from the list.
-  procedure SparseListNodeExtract (AList: PSparseList; ANode: PSparseListNode); // Detaches the given node from the list.
-  procedure SparseListNodeAppend  (AList: PSparseList; ANode: PSparseListNode); // Attaches an external node to the end of the list.
-  procedure SparseListNodeInsert  (AList: PSparseList; ANode, ADest: PSparseListNode); // Inserts an external node in place of an existing one.
+  function  ListSparseNodeCreate  (AList: PListSparse): PListSparseNode; // Creates a new list node and returns it.
+  procedure ListSparseNodeDestroy (AList: PListSparse; ANode: PListSparseNode); // Removes a node from the list.
+  procedure ListSparseNodeExtract (AList: PListSparse; ANode: PListSparseNode); // Detaches the given node from the list.
+  procedure ListSparseNodeAppend  (AList: PListSparse; ANode: PListSparseNode); // Attaches an external node to the end of the list.
+  procedure ListSparseNodeInsert  (AList: PListSparse; ANode, ADest: PListSparseNode); // Inserts an external node in place of an existing one.
 
 
 implementation
@@ -102,7 +102,7 @@ implementation
 {
   Allocates a new list on the heap and initializes it.
 
-  [i] If you have a list allocated on the stack, initialize it directly with the "SparseListInitialize" function.
+  [i] If you have a list allocated on the stack, initialize it directly with the "ListSparseInitialize" function.
 
   Parameters:
     • ASizeData       — the size of the data in each node in bytes, in range [1,n].
@@ -111,24 +111,24 @@ implementation
   Result:
     • A non-nil pointer to an allocated and initialized list.
 }
-function SparseListCreate(ASizeData, ANodeNumSegment: Int32): PSparseList;
+function ListSparseCreate(ASizeData, ANodeNumSegment: Int32): PListSparse;
 begin
-  Result := GetMem(SizeOf(TSparseList));
-  SparseListInitialize(Result, ASizeData, ANodeNumSegment);
+  Result := GetMem(SizeOf(TListSparse));
+  ListSparseInitialize(Result, ASizeData, ANodeNumSegment);
 end;
 
 
 {
   Finalizes and deallocates the list from the heap.
 
-  [i] If you have a list allocated on the stack, finalize it directly with the "SparseListFinalize" function.
+  [i] If you have a list allocated on the stack, finalize it directly with the "ListSparseFinalize" function.
 
   Parameters:
     • AList — a pointer to the structure of the list to finalize and deallocate.
 }
-procedure SparseListDestroy(AList: PSparseList);
+procedure ListSparseDestroy(AList: PListSparse);
 begin
-  SparseListFinalize(AList);
+  ListSparseFinalize(AList);
   FreeMem(AList);
 end;
 
@@ -138,7 +138,7 @@ end;
 
   This function initializes the fields of the list structure. Calculates and remembers the data size of a single node and the
   size of each list node. The list is empty by default and does not contain any segments or nodes. The first segment will be
-  allocated only after the first node is created using the "SparseListNodeCreate" function.
+  allocated only after the first node is created using the "ListSparseNodeCreate" function.
 
   [i] This function should be used to initialize a list allocated on the stack.
 
@@ -147,7 +147,7 @@ end;
     • ASizeData       — the size of the data in each node in bytes, in range [1,n].
     • ANodeNumSegment — the number of nodes on each segment, in range [1,n].
 }
-procedure SparseListInitialize(AList: PSparseList; ASizeData, ANodeNumSegment: Int32);
+procedure ListSparseInitialize(AList: PListSparse; ASizeData, ANodeNumSegment: Int32);
 begin
   AList^.SegmentHead    := nil;
   AList^.BankHead       := nil;
@@ -156,7 +156,7 @@ begin
   AList^.NodeNum        := 0;
   AList^.NodeNumSegment := ANodeNumSegment;
   AList^.SizeData       := ASizeData;
-  AList^.SizeNode       := ASizeData + SizeOf(TSparseListNode);
+  AList^.SizeNode       := ASizeData + SizeOf(TListSparseNode);
 end;
 
 
@@ -172,10 +172,10 @@ end;
   Parameters:
     • AList — a pointer to the structure of the list to finalize.
 }
-procedure SparseListFinalize(AList: PSparseList);
+procedure ListSparseFinalize(AList: PListSparse);
 var
-  SegmentCurr: PSparseListSegment;
-  SegmentNext: PSparseListSegment;
+  SegmentCurr: PListSparseSegment;
+  SegmentNext: PListSparseSegment;
 begin
   SegmentCurr := AList^.SegmentHead;
 
@@ -199,7 +199,7 @@ end;
   Parameters:
     • AList — a pointer to the structure of the list.
 }
-procedure SparseListClear(AList: PSparseList);
+procedure ListSparseClear(AList: PListSparse);
 begin
   // Do nothing if the list is empty.
   if AList^.NodeNum = 0 then exit;
@@ -225,10 +225,10 @@ end;
     • AList     — a pointer to the structure of the list.
     • ACallback — a pointer to the callback function that compares the data of two nodes.
 }
-procedure SparseListSortBubble(AList: PSparseList; ACallback: TSparseListNodeCallbackCompare);
+procedure ListSparseSortBubble(AList: PListSparse; ACallback: TListSparseNodeCallbackCompare);
 var
-  NodeLast:    PSparseListNode;
-  NodeCurr:    PSparseListNode;
+  NodeLast:    PListSparseNode;
+  NodeCurr:    PListSparseNode;
   NodeData:    Pointer;
   NodeSwapped: Boolean;
 begin
@@ -292,17 +292,17 @@ end;
   Result:
     • A non-nil pointer to the new node.
 }
-function SparseListNodeCreate(AList: PSparseList): PSparseListNode;
+function ListSparseNodeCreate(AList: PListSparse): PListSparseNode;
 var
-  SegmentHead: PSparseListSegment;
-  NodeHead:    PSparseListNode;
-  NodeTail:    PSparseListNode;
+  SegmentHead: PListSparseSegment;
+  NodeHead:    PListSparseNode;
+  NodeTail:    PListSparseNode;
 begin
   // Check if there are nodes in the bank and if not, allocate a new segment.
   if AList^.BankHead = nil then
   begin
     // Allocate a new node segment and connect it to the segment list.
-    SegmentHead       := GetMem(SizeOf(TSparseListSegment) + AList^.SizeNode * AList^.NodeNumSegment);
+    SegmentHead       := GetMem(SizeOf(TListSparseSegment) + AList^.SizeNode * AList^.NodeNumSegment);
     SegmentHead^.Next := AList^.SegmentHead;
 
     // Update the head of the segment list and set the segment bank to its first node.
@@ -337,14 +337,14 @@ end;
   This function is used to destroy an external node. The node is not actually freed from memory because it is part of the
   entire segment. Destroying a node means returning it to the bank.
 
-  [!] Never destroy a node that is not external. First detach it from the list using the "SparseListNodeExtract" function
+  [!] Never destroy a node that is not external. First detach it from the list using the "ListSparseNodeExtract" function
       and then release it using the function below.
 
   Parameters:
     • AList — a pointer to the structure of the list.
     • ANode — a pointer to the list node to destroy.
 }
-procedure SparseListNodeDestroy(AList: PSparseList; ANode: PSparseListNode);
+procedure ListSparseNodeDestroy(AList: PListSparse; ANode: PListSparseNode);
 begin
   // Just return the node to the bank (update the head node of the bank).
   ANode^.Next     := AList^.BankHead;
@@ -366,7 +366,7 @@ end;
     • AList — a pointer to the structure of the list.
     • ANode — a pointer to an external node to detach from the list.
 }
-procedure SparseListNodeExtract(AList: PSparseList; ANode: PSparseListNode);
+procedure ListSparseNodeExtract(AList: PListSparse; ANode: PListSparseNode);
 begin
   // If the node to be detached is not the head of the list, update the link of the previous node.
   // Otherwise, update the pointer to the head of the list.
@@ -396,13 +396,13 @@ end;
   [!] Never attempt to use this function to attach a node to a list that is already attached to it. Otherwise, the links in
       the list nodes will be broken and the list itself will no longer be coherent (generally, it will be UB).
 
-  [i] If you need to insert a node anywhere in the list, use the "SparseListNodeInsert" function.
+  [i] If you need to insert a node anywhere in the list, use the "ListSparseNodeInsert" function.
 
   Parameters:
     • AList — a pointer to the structure of the list.
     • ANode — a pointer to an external node to attach to the list.
 }
-procedure SparseListNodeAppend(AList: PSparseList; ANode: PSparseListNode);
+procedure ListSparseNodeAppend(AList: PListSparse; ANode: PListSparseNode);
 begin
   // Set the links in the node to attach.
   ANode^.Prev := AList^.NodeTail;
@@ -432,13 +432,13 @@ end;
   [!] Never attempt to use this function to attach a node to a list that is already attached to it. Otherwise, the links in
       the list nodes will be broken and the list itself will no longer be coherent (generally, it will be UB).
 
-  [i] If you need to add a node to the end of the list, use the "SparseListNodeAppend" function.
+  [i] If you need to add a node to the end of the list, use the "ListSparseNodeAppend" function.
 
   Parameters:
     • AList — a pointer to the structure of the list.
     • ANode — a pointer to an external node to attach to the list.
 }
-procedure SparseListNodeInsert(AList: PSparseList; ANode, ADest: PSparseListNode);
+procedure ListSparseNodeInsert(AList: PListSparse; ANode, ADest: PListSparseNode);
 begin
   // If the target node is not the head of the list, update its link to the next node.
   // Otherwise, the new node becomes the new head of the list.

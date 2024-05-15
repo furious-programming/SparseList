@@ -38,16 +38,16 @@ unit TestSparseList;
 interface
 
 uses
-  SparseList;
+  ListSparse;
 
 
-  function TestSparseListAppend   (AList: PSparseList; ANodeNum: Int32): Int64;
-  function TestSparseListInsert   (AList: PSparseList): Int64;
-  function TestSparseListChop     (AList: PSparseList): Int64;
-  function TestSparseListSort     (AList: PSparseList): Int64;
-  function TestSparseListClear    (AList: PSparseList): Int64;
-  function TestSparseListTraverse (AList: PSparseList): Int64;
-  function TestSparseListDestroy  (AList: PSparseList): Int64;
+  function TestSparseListAppend   (AList: PListSparse; ANodeNum: Int32): Int64;
+  function TestSparseListInsert   (AList: PListSparse): Int64;
+  function TestSparseListChop     (AList: PListSparse): Int64;
+  function TestSparseListSort     (AList: PListSparse): Int64;
+  function TestSparseListClear    (AList: PListSparse): Int64;
+  function TestSparseListTraverse (AList: PListSparse): Int64;
+  function TestSparseListDestroy  (AList: PListSparse): Int64;
 
 
 implementation
@@ -56,7 +56,7 @@ uses
   TestUtils;
 
 
-function TestSparseListAppend(AList: PSparseList; ANodeNum: Int32): Int64;
+function TestSparseListAppend(AList: PListSparse; ANodeNum: Int32): Int64;
 var
   NodeSeed: UInt32 = $600D5EED;
 begin
@@ -64,7 +64,7 @@ begin
 
   while ANodeNum > 0 do
   begin
-    SparseListNodeAppend(AList, SparseListNodeCreate(AList));
+    ListSparseNodeAppend(AList, ListSparseNodeCreate(AList));
     PUInt32(@AList^.NodeTail^.Data)^ := NodeSeed;
 
     NodeSeed := NodeSeed xor (NodeSeed shl 13);
@@ -78,10 +78,10 @@ begin
 end;
 
 
-function TestSparseListInsert(AList: PSparseList): Int64;
+function TestSparseListInsert(AList: PListSparse): Int64;
 var
-  NodeNew:    PSparseListNode;
-  NodeCurr:   PSparseListNode;
+  NodeNew:    PListSparseNode;
+  NodeCurr:   PListSparseNode;
   NodeInsert: Int32  = 0;
   NodeSeed:   UInt32 = $BAD5EED;
 begin
@@ -92,10 +92,10 @@ begin
   begin
     if NodeInsert = 0 then
     begin
-      NodeNew := SparseListNodeCreate(AList);
+      NodeNew := ListSparseNodeCreate(AList);
       PUInt32(@NodeNew^.Data)^ := NodeSeed;
 
-      SparseListNodeInsert(AList, NodeNew, NodeCurr);
+      ListSparseNodeInsert(AList, NodeNew, NodeCurr);
     end;
 
     NodeSeed := NodeSeed xor (NodeSeed shl 13);
@@ -110,10 +110,10 @@ begin
 end;
 
 
-function TestSparseListChop(AList: PSparseList): Int64;
+function TestSparseListChop(AList: PListSparse): Int64;
 var
-  Node:     PSparseListNode;
-  NodeNext: PSparseListNode;
+  Node:     PListSparseNode;
+  NodeNext: PListSparseNode;
   NodeChop: Int32 = 0;
 begin
   Result := TestGetTicks();
@@ -125,8 +125,8 @@ begin
 
     if NodeChop = 0 then
     begin
-      SparseListNodeExtract(AList, Node);
-      SparseListNodeDestroy(AList, Node);
+      ListSparseNodeExtract(AList, Node);
+      ListSparseNodeDestroy(AList, Node);
     end;
 
     Node     := NodeNext;
@@ -137,30 +137,30 @@ begin
 end;
 
 
-  function TestSparseListSortNodes(ANodeA, ANodeB: PSparseListNode): Boolean;
+  function TestSparseListSortNodes(ANodeA, ANodeB: PListSparseNode): Boolean;
   begin
     Result := PUInt32(@ANodeA^.Data)^ > PUInt32(@ANodeB^.Data)^;
   end;
 
-function TestSparseListSort(AList: PSparseList): Int64;
+function TestSparseListSort(AList: PListSparse): Int64;
 begin
   Result := TestGetTicks();
-  SparseListSortBubble(AList, @TestSparseListSortNodes);
+  ListSparseSortBubble(AList, @TestSparseListSortNodes);
   Result := TestGetTicks() - Result;
 end;
 
 
-function TestSparseListClear(AList: PSparseList): Int64;
+function TestSparseListClear(AList: PListSparse): Int64;
 begin
   Result := TestGetTicks();
-  SparseListClear(AList);
+  ListSparseClear(AList);
   Result := TestGetTicks() - Result;
 end;
 
 
-function TestSparseListTraverse(AList: PSparseList): Int64;
+function TestSparseListTraverse(AList: PListSparse): Int64;
 var
-  Node: PSparseListNode;
+  Node: PListSparseNode;
   Num:  Int32 = 0;
 begin
   Result := TestGetTicks();
@@ -188,10 +188,10 @@ begin
 end;
 
 
-function TestSparseListDestroy(AList: PSparseList): Int64;
+function TestSparseListDestroy(AList: PListSparse): Int64;
 begin
   Result := TestGetTicks();
-  SparseListDestroy(AList);
+  ListSparseDestroy(AList);
   Result := TestGetTicks() - Result;
 end;
 

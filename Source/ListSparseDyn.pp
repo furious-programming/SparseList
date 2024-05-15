@@ -30,7 +30,7 @@
   For more information, please refer to <http://unlicense.org/>
 }
 
-unit SparseListDyn;
+unit ListSparseDyn;
 
   // Global compiler switches.
   {$INCLUDE TestSwitches.inc}
@@ -40,37 +40,37 @@ interface
 
 type
   // Typed pointer data types.
-  PSparseListDynSegment = ^TSparseListDynSegment; // A pointer to the segment node.
-  PSparseListDynNode    = ^TSparseListDynNode;    // A pointer to the list node.
-  PSparseListDyn        = ^TSparseListDyn;        // A pointer to the list structure.
+  PListSparseDynSegment = ^TListSparseDynSegment; // A pointer to the segment node.
+  PListSparseDynNode    = ^TListSparseDynNode;    // A pointer to the list node.
+  PListSparseDyn        = ^TListSparseDyn;        // A pointer to the list structure.
 
   // A structure of a segment node.
-  TSparseListDynSegment = record
-    Prev:     PSparseListDynSegment; // A pointer to the previous segment node.
-    Next:     PSparseListDynSegment; // A pointer to the next segment node.
-    BankPrev: PSparseListDynSegment; // A pointer to the previous segment with unused nodes.
-    BankNext: PSparseListDynSegment; // A pointer to the next segment with unused nodes.
-    BankHead: PSparseListDynNode;    // A pointer to the first unused node of the segment (head of a singly-linked list of nodes).
+  TListSparseDynSegment = record
+    Prev:     PListSparseDynSegment; // A pointer to the previous segment node.
+    Next:     PListSparseDynSegment; // A pointer to the next segment node.
+    BankPrev: PListSparseDynSegment; // A pointer to the previous segment with unused nodes.
+    BankNext: PListSparseDynSegment; // A pointer to the next segment with unused nodes.
+    BankHead: PListSparseDynNode;    // A pointer to the first unused node of the segment (head of a singly-linked list of nodes).
     UsedNum:  Int32;                 // The number of all segment nodes currently in use.
     Data:     record end;            // The beginning of the segment nodes' memory block (has name, address and zero-size).
   end;
 
   // A structure of a list node.
-  TSparseListDynNode = record
-    Segment: PSparseListDynSegment; // A pointer to the segment node to which the node belongs.
-    Prev:    PSparseListDynNode;    // A pointer to the previous node.
-    Next:    PSparseListDynNode;    // A pointer to the next node.
+  TListSparseDynNode = record
+    Segment: PListSparseDynSegment; // A pointer to the segment node to which the node belongs.
+    Prev:    PListSparseDynNode;    // A pointer to the previous node.
+    Next:    PListSparseDynNode;    // A pointer to the next node.
     Data:    record end;            // The beginning of the node's data memory block (has name, address and zero-size).
   end;
 
   // A structure of the list.
-  TSparseListDyn = record
-    SegmentBankHead: PSparseListDynSegment; // A pointer to the first segment with unused node.
-    SegmentHead:     PSparseListDynSegment; // A pointer to the first segment node.
-    SegmentTail:     PSparseListDynSegment; // A pointer to the last segment node.
+  TListSparseDyn = record
+    SegmentBankHead: PListSparseDynSegment; // A pointer to the first segment with unused node.
+    SegmentHead:     PListSparseDynSegment; // A pointer to the first segment node.
+    SegmentTail:     PListSparseDynSegment; // A pointer to the last segment node.
     SegmentNum:      Int32;                 // The number of all currently allocated segments.
-    NodeHead:        PSparseListDynNode;    // A pointer to the first list node.
-    NodeTail:        PSparseListDynNode;    // A pointer to the last list node.
+    NodeHead:        PListSparseDynNode;    // A pointer to the first list node.
+    NodeTail:        PListSparseDynNode;    // A pointer to the last list node.
     NodeNum:         Int32;                 // The number of all list nodes.
     NodeNumSegment:  Int32;                 // The number of nodes on each segment.
     SizeData:        Int32;                 // The data size of each node, in bytes.
@@ -79,43 +79,43 @@ type
 
 type
   // Callback comparing data of two nodes, for the purpose of sorting the list.
-  TSparseListDynNodeCallbackCompare = function (ANodeA, ANodeB: PSparseListDynNode): Boolean;
+  TListSparseDynNodeCallbackCompare = function (ANodeA, ANodeB: PListSparseDynNode): Boolean;
 
 
   // Allocating and deallocating a list.
-  function  SparseListDynCreate      (ASizeData, ANodeNumSegment: Int32): PSparseListDyn; // Allocates a new list on the heap and initializes it.
-  procedure SparseListDynDestroy     (AList: PSparseListDyn); // Finalizes and deallocates the list from the heap.
+  function  ListSparseDynCreate      (ASizeData, ANodeNumSegment: Int32): PListSparseDyn; // Allocates a new list on the heap and initializes it.
+  procedure ListSparseDynDestroy     (AList: PListSparseDyn); // Finalizes and deallocates the list from the heap.
 
   // Initializing and finalizing a list.
-  procedure SparseListDynInitialize  (AList: PSparseListDyn; ASizeData, ANodeNumSegment: Int32); // Initializes an existing list.
-  procedure SparseListDynFinalize    (AList: PSparseListDyn); // Finalizes an existing list.
+  procedure ListSparseDynInitialize  (AList: PListSparseDyn; ASizeData, ANodeNumSegment: Int32); // Initializes an existing list.
+  procedure ListSparseDynFinalize    (AList: PListSparseDyn); // Finalizes an existing list.
 
   // Clearing the list.
-  procedure SparseListDynClear       (AList: PSparseListDyn); // Removes all nodes of the list.
+  procedure ListSparseDynClear       (AList: PListSparseDyn); // Removes all nodes of the list.
 
   // Sorting the list.
-  procedure SparseListDynSortBubble  (AList: PSparseListDyn; ACallback: TSparseListDynNodeCallbackCompare); // Performs bubble sorting on the list.
+  procedure ListSparseDynSortBubble  (AList: PListSparseDyn; ACallback: TListSparseDynNodeCallbackCompare); // Performs bubble sorting on the list.
 
   // Creating, destroying and managing nodes.
-  function  SparseListDynNodeCreate  (AList: PSparseListDyn): PSparseListDynNode; // Creates a new list node and returns it.
-  procedure SparseListDynNodeDestroy (AList: PSparseListDyn; ANode: PSparseListDynNode); // Removes a node from the list.
-  procedure SparseListDynNodeExtract (AList: PSparseListDyn; ANode: PSparseListDynNode); // Detaches the given node from the list.
-  procedure SparseListDynNodeAppend  (AList: PSparseListDyn; ANode: PSparseListDynNode); // Attaches an external node to the end of the list.
-  procedure SparseListDynNodeInsert  (AList: PSparseListDyn; ANode, ADest: PSparseListDynNode); // Inserts an external node in place of an existing one.
+  function  ListSparseDynNodeCreate  (AList: PListSparseDyn): PListSparseDynNode; // Creates a new list node and returns it.
+  procedure ListSparseDynNodeDestroy (AList: PListSparseDyn; ANode: PListSparseDynNode); // Removes a node from the list.
+  procedure ListSparseDynNodeExtract (AList: PListSparseDyn; ANode: PListSparseDynNode); // Detaches the given node from the list.
+  procedure ListSparseDynNodeAppend  (AList: PListSparseDyn; ANode: PListSparseDynNode); // Attaches an external node to the end of the list.
+  procedure ListSparseDynNodeInsert  (AList: PListSparseDyn; ANode, ADest: PListSparseDynNode); // Inserts an external node in place of an existing one.
 
 
 implementation
 
 
   // Allocating and deallocating list segments.
-  procedure SparseListDynSegmentCreate  (AList: PSparseListDyn); forward; // Allocates a new segment and joins it to the segment list.
-  procedure SparseListDynSegmentDestroy (AList: PSparseListDyn; ASegment: PSparseListDynSegment); forward; // Detaches a given segment from the segment list and deallocates it.
+  procedure ListSparseDynSegmentCreate  (AList: PListSparseDyn); forward; // Allocates a new segment and joins it to the segment list.
+  procedure ListSparseDynSegmentDestroy (AList: PListSparseDyn; ASegment: PListSparseDynSegment); forward; // Detaches a given segment from the segment list and deallocates it.
 
 
 {
   Allocates a new list on the heap and initializes it.
 
-  [i] If you have a list allocated on the stack, initialize it directly with the "SparseListDynInitialize" function.
+  [i] If you have a list allocated on the stack, initialize it directly with the "ListSparseDynInitialize" function.
 
   Parameters:
     • ASizeData       — the size of the data in each node in bytes, in range [1,n].
@@ -124,24 +124,24 @@ implementation
   Result:
     • A non-nil pointer to an allocated and initialized list.
 }
-function SparseListDynCreate(ASizeData, ANodeNumSegment: Int32): PSparseListDyn;
+function ListSparseDynCreate(ASizeData, ANodeNumSegment: Int32): PListSparseDyn;
 begin
-  Result := GetMem(SizeOf(TSparseListDyn));
-  SparseListDynInitialize(Result, ASizeData, ANodeNumSegment);
+  Result := GetMem(SizeOf(TListSparseDyn));
+  ListSparseDynInitialize(Result, ASizeData, ANodeNumSegment);
 end;
 
 
 {
   Finalizes and deallocates the list from the heap.
 
-  [i] If you have a list allocated on the stack, finalize it directly with the "SparseListDynFinalize" function.
+  [i] If you have a list allocated on the stack, finalize it directly with the "ListSparseDynFinalize" function.
 
   Parameters:
     • AList — a pointer to the structure of the list to finalize and deallocate.
 }
-procedure SparseListDynDestroy(AList: PSparseListDyn);
+procedure ListSparseDynDestroy(AList: PListSparseDyn);
 begin
-  SparseListDynFinalize(AList);
+  ListSparseDynFinalize(AList);
   FreeMem(AList);
 end;
 
@@ -151,7 +151,7 @@ end;
 
   This function initializes the fields of the list structure. Calculates and remembers the data size of a single node and the
   size of each list node. The list is empty by default and does not contain any segments or nodes. The first segment will be
-  allocated only after the first node is created using the "SparseListDynNodeCreate" function.
+  allocated only after the first node is created using the "ListSparseDynNodeCreate" function.
 
   [i] This function should be used to initialize a list allocated on the stack.
 
@@ -160,7 +160,7 @@ end;
     • ASizeData       — the size of the data in each node in bytes, in range [1,n].
     • ANodeNumSegment — the number of nodes on each segment, in range [1,n].
 }
-procedure SparseListDynInitialize(AList: PSparseListDyn; ASizeData, ANodeNumSegment: Int32);
+procedure ListSparseDynInitialize(AList: PListSparseDyn; ASizeData, ANodeNumSegment: Int32);
 begin
   AList^.SegmentBankHead := nil;
   AList^.SegmentHead     := nil;
@@ -171,7 +171,7 @@ begin
   AList^.NodeNum         := 0;
   AList^.NodeNumSegment  := ANodeNumSegment;
   AList^.SizeData        := ASizeData;
-  AList^.SizeNode        := ASizeData + SizeOf(TSparseListDynNode);
+  AList^.SizeNode        := ASizeData + SizeOf(TListSparseDynNode);
 end;
 
 
@@ -187,10 +187,10 @@ end;
   Parameters:
     • AList — a pointer to the structure of the list to finalize.
 }
-procedure SparseListDynFinalize(AList: PSparseListDyn);
+procedure ListSparseDynFinalize(AList: PListSparseDyn);
 var
-  SegmentCurr: PSparseListDynSegment;
-  SegmentNext: PSparseListDynSegment;
+  SegmentCurr: PListSparseDynSegment;
+  SegmentNext: PListSparseDynSegment;
 begin
   SegmentCurr := AList^.SegmentHead;
 
@@ -214,13 +214,13 @@ end;
   Parameters:
     • AList — a pointer to the structure of the list.
 }
-procedure SparseListDynClear(AList: PSparseListDyn);
+procedure ListSparseDynClear(AList: PListSparseDyn);
 begin
   // Do nothing if the list is empty.
   if AList^.NodeNum = 0 then exit;
 
   // Deallocate all existing list segments and thus the memory of all used and unused nodes.
-  SparseListDynFinalize(AList);
+  ListSparseDynFinalize(AList);
 
   // Reset list fields.
   AList^.SegmentBankHead := nil;
@@ -245,10 +245,10 @@ end;
     • AList     — a pointer to the structure of the list.
     • ACallback — a pointer to the callback function that compares the data of two nodes.
 }
-procedure SparseListDynSortBubble(AList: PSparseListDyn; ACallback: TSparseListDynNodeCallbackCompare);
+procedure ListSparseDynSortBubble(AList: PListSparseDyn; ACallback: TListSparseDynNodeCallbackCompare);
 var
-  NodeLast:    PSparseListDynNode;
-  NodeCurr:    PSparseListDynNode;
+  NodeLast:    PListSparseDynNode;
+  NodeCurr:    PListSparseDynNode;
   NodeData:    Pointer;
   NodeSwapped: Boolean;
 begin
@@ -309,14 +309,14 @@ end;
   Result:
     • A non-nil pointer to the new node.
 }
-function SparseListDynNodeCreate(AList: PSparseListDyn): PSparseListDynNode;
+function ListSparseDynNodeCreate(AList: PListSparseDyn): PListSparseDynNode;
 var
-  Segment: PSparseListDynSegment;
+  Segment: PListSparseDynSegment;
 begin
   // If no segment exists (freshly initialized or cleared list), allocate a new one. Allocating a new segment not only
   // allocates memory for a new set of nodes, but also sets that segment as the first bank of unused nodes.
   if AList^.SegmentBankHead = nil then
-    SparseListDynSegmentCreate(AList);
+    ListSparseDynSegmentCreate(AList);
 
   // Get a pointer to the first segment-bank containing unused nodes.
   Segment := AList^.SegmentBankHead;
@@ -357,16 +357,16 @@ end;
   from memory. If all nodes of the owner segment were in use before deleting a node, then when a node is deleted, the segment
   is added at the beginning of the list of segments containing unused nodes.
 
-  [!] Never destroy a node that is not external. First detach it from the list using the "SparseListDynNodeExtract" function
+  [!] Never destroy a node that is not external. First detach it from the list using the "ListSparseDynNodeExtract" function
       and then release it using the function below.
 
   Parameters:
     • AList — a pointer to the structure of the list.
     • ANode — a pointer to the list node to destroy.
 }
-procedure SparseListDynNodeDestroy(AList: PSparseListDyn; ANode: PSparseListDynNode);
+procedure ListSparseDynNodeDestroy(AList: PListSparseDyn; ANode: PListSparseDynNode);
 var
-  Segment: PSparseListDynSegment;
+  Segment: PListSparseDynSegment;
 begin
   // Take a pointer to the segment from which the node being destroyed comes from.
   Segment := ANode^.Segment;
@@ -379,7 +379,7 @@ begin
   // If all nodes of a segment are not in use, free it from memory. Destroying a segment not only detaches it from the list
   // of all allocated segments and frees it from memory, but also removes it from the list of segments with unused nodes.
   if Segment^.UsedNum = 0 then
-    SparseListDynSegmentDestroy(AList, Segment)
+    ListSparseDynSegmentDestroy(AList, Segment)
   else
     // If the nodes of the segment-owner are still in use, additionally check whether this segment was part of the list of
     // segments containing unused nodes and if not, add it to the list.
@@ -410,7 +410,7 @@ end;
     • AList — a pointer to the structure of the list.
     • ANode — a pointer to an external node to detach from the list.
 }
-procedure SparseListDynNodeExtract(AList: PSparseListDyn; ANode: PSparseListDynNode);
+procedure ListSparseDynNodeExtract(AList: PListSparseDyn; ANode: PListSparseDynNode);
 begin
   // If the node to be detached is not the head of the list, update the link of the previous node.
   // Otherwise, update the pointer to the head of the list.
@@ -440,13 +440,13 @@ end;
   [!] Never attempt to use this function to attach a node to a list that is already attached to it. Otherwise, the links in
       the list nodes will be broken and the list itself will no longer be coherent (generally, it will be UB).
 
-  [i] If you need to insert a node anywhere in the list, use the "SparseListDynNodeInsert" function.
+  [i] If you need to insert a node anywhere in the list, use the "ListSparseDynNodeInsert" function.
 
   Parameters:
     • AList — a pointer to the structure of the list.
     • ANode — a pointer to an external node to attach to the list.
 }
-procedure SparseListDynNodeAppend(AList: PSparseListDyn; ANode: PSparseListDynNode);
+procedure ListSparseDynNodeAppend(AList: PListSparseDyn; ANode: PListSparseDynNode);
 begin
   // Set the links in the node to attach.
   ANode^.Prev := AList^.NodeTail;
@@ -476,13 +476,13 @@ end;
   [!] Never attempt to use this function to attach a node to a list that is already attached to it. Otherwise, the links in
       the list nodes will be broken and the list itself will no longer be coherent (generally, it will be UB).
 
-  [i] If you need to add a node to the end of the list, use the "SparseListDynNodeAppend" function.
+  [i] If you need to add a node to the end of the list, use the "ListSparseDynNodeAppend" function.
 
   Parameters:
     • AList — a pointer to the structure of the list.
     • ANode — a pointer to an external node to attach to the list.
 }
-procedure SparseListDynNodeInsert(AList: PSparseListDyn; ANode, ADest: PSparseListDynNode);
+procedure ListSparseDynNodeInsert(AList: PListSparseDyn; ANode, ADest: PListSparseDynNode);
 begin
   // If the target node is not the head of the list, update its link to the next node.
   // Otherwise, the new node becomes the new head of the list.
@@ -521,14 +521,14 @@ end;
   Result:
     • A non-nil pointer to the allocated segment.
 }
-procedure SparseListDynSegmentCreate(AList: PSparseListDyn);
+procedure ListSparseDynSegmentCreate(AList: PListSparseDyn);
 var
-  Segment:  PSparseListDynSegment;
-  NodeHead: PSparseListDynNode;
-  NodeTail: PSparseListDynNode;
+  Segment:  PListSparseDynSegment;
+  NodeHead: PListSparseDynNode;
+  NodeTail: PListSparseDynNode;
 begin
   // Allocate a new segment and initialize its fields.
-  Segment           := GetMem(SizeOf(TSparseListDynSegment) + AList^.SizeNode * AList^.NodeNumSegment);
+  Segment           := GetMem(SizeOf(TListSparseDynSegment) + AList^.SizeNode * AList^.NodeNumSegment);
   Segment^.Prev     := AList^.SegmentTail;
   Segment^.Next     := nil;
   Segment^.BankPrev := nil;
@@ -584,7 +584,7 @@ end;
     • AList    — a pointer to the structure of the list.
     • ASegment — a pointer to the segment to deallocate.
 }
-procedure SparseListDynSegmentDestroy(AList: PSparseListDyn; ASegment: PSparseListDynSegment);
+procedure ListSparseDynSegmentDestroy(AList: PListSparseDyn; ASegment: PListSparseDynSegment);
 begin
   // If the segment to be deallocated is not the head of the segment list, update the link in the previous segment.
   // Otherwise, update the pointer to the head of the segment list.

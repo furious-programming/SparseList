@@ -63,15 +63,15 @@
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="..\Source\SparseList.pp"/>
+        <Filename Value="..\Source\ListSparse.pp"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="..\Source\SparseListDyn.pp"/>
+        <Filename Value="..\Source\ListSparseDyn.pp"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="..\Source\SimpleList.pp"/>
+        <Filename Value="..\Source\ListSimple.pp"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>

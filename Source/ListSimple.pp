@@ -30,7 +30,7 @@
   For more information, please refer to <http://unlicense.org/>
 }
 
-unit SimpleList;
+unit ListSimple;
 
   // Global compiler switches.
   {$INCLUDE TestSwitches.inc}
@@ -40,49 +40,49 @@ interface
 
 type
   // Typed pointer data types.
-  PSimpleListNode = ^TSimpleListNode; // A pointer to the list node.
-  PSimpleList     = ^TSimpleList;     // A pointer to the list structure.
+  PListSimpleNode = ^TListSimpleNode; // A pointer to the list node.
+  PListSimple     = ^TListSimple;     // A pointer to the list structure.
 
   // A structure of a list node.
-  TSimpleListNode = record
-    Prev: PSimpleListNode; // A pointer to the previous node.
-    Next: PSimpleListNode; // A pointer to the next node.
+  TListSimpleNode = record
+    Prev: PListSimpleNode; // A pointer to the previous node.
+    Next: PListSimpleNode; // A pointer to the next node.
     Data: record end;      // The beginning of the node's data memory block (has name, address and zero-size).
   end;
 
   // A structure of the list.
-  TSimpleList = record
-    NodeHead: PSimpleListNode; // A pointer to the first list node.
-    NodeTail: PSimpleListNode; // A pointer to the last list node.
+  TListSimple = record
+    NodeHead: PListSimpleNode; // A pointer to the first list node.
+    NodeTail: PListSimpleNode; // A pointer to the last list node.
     NodeNum:  Int32;           // The number of all list nodes.
     SizeData: Int32;           // The data size of each node, in bytes.
   end;
 
 type
   // Callback comparing data of two nodes, for the purpose of sorting the list.
-  TSimpleListNodeCallbackCompare = function (ANodeA, ANodeB: PSimpleListNode): Boolean;
+  TListSimpleNodeCallbackCompare = function (ANodeA, ANodeB: PListSimpleNode): Boolean;
 
 
   // Allocating and deallocating a list.
-  function  SimpleListCreate      (ASizeData: Int32): PSimpleList; // Allocates a new list on the heap and initializes it.
-  procedure SimpleListDestroy     (AList: PSimpleList); // Finalizes and deallocates the list from the heap.
+  function  ListSimpleCreate      (ASizeData: Int32): PListSimple; // Allocates a new list on the heap and initializes it.
+  procedure ListSimpleDestroy     (AList: PListSimple); // Finalizes and deallocates the list from the heap.
 
   // Initializing and finalizing a list.
-  procedure SimpleListInitialize  (AList: PSimpleList; ASizeData: Int32); // Initializes an existing list.
-  procedure SimpleListFinalize    (AList: PSimpleList); // Finalizes an existing list.
+  procedure ListSimpleInitialize  (AList: PListSimple; ASizeData: Int32); // Initializes an existing list.
+  procedure ListSimpleFinalize    (AList: PListSimple); // Finalizes an existing list.
 
   // Clearing the list.
-  procedure SimpleListClear       (AList: PSimpleList); // Removes all nodes of the list.
+  procedure ListSimpleClear       (AList: PListSimple); // Removes all nodes of the list.
 
   // Sorting the list.
-  procedure SimpleListSortBubble  (AList: PSimpleList; ACallback: TSimpleListNodeCallbackCompare); // Performs bubble sorting on the list.
+  procedure ListSimpleSortBubble  (AList: PListSimple; ACallback: TListSimpleNodeCallbackCompare); // Performs bubble sorting on the list.
 
   // Creating, destroying and managing nodes.
-  function  SimpleListNodeCreate  (AList: PSimpleList): PSimpleListNode; // Creates a new list node and returns it.
-  procedure SimpleListNodeDestroy (AList: PSimpleList; ANode: PSimpleListNode); // Removes a node from the list.
-  procedure SimpleListNodeExtract (AList: PSimpleList; ANode: PSimpleListNode); // Detaches the given node from the list.
-  procedure SimpleListNodeAppend  (AList: PSimpleList; ANode: PSimpleListNode); // Attaches an external node to the end of the list.
-  procedure SimpleListNodeInsert  (AList: PSimpleList; ANode, ADest: PSimpleListNode); // Inserts an external node in place of an existing one.
+  function  ListSimpleNodeCreate  (AList: PListSimple): PListSimpleNode; // Creates a new list node and returns it.
+  procedure ListSimpleNodeDestroy (AList: PListSimple; ANode: PListSimpleNode); // Removes a node from the list.
+  procedure ListSimpleNodeExtract (AList: PListSimple; ANode: PListSimpleNode); // Detaches the given node from the list.
+  procedure ListSimpleNodeAppend  (AList: PListSimple; ANode: PListSimpleNode); // Attaches an external node to the end of the list.
+  procedure ListSimpleNodeInsert  (AList: PListSimple; ANode, ADest: PListSimpleNode); // Inserts an external node in place of an existing one.
 
 
 implementation
@@ -91,7 +91,7 @@ implementation
 {
   Allocates a new list on the heap and initializes it.
 
-  [i] If you have a list allocated on the stack, initialize it directly with the "SimpleListInitialize" function.
+  [i] If you have a list allocated on the stack, initialize it directly with the "ListSimpleInitialize" function.
 
   Parameters:
     • ASizeData — the size of the data in each node in bytes, in range [1,n].
@@ -99,24 +99,24 @@ implementation
   Result:
     • A non-nil pointer to an allocated and initialized list.
 }
-function SimpleListCreate(ASizeData: Int32): PSimpleList;
+function ListSimpleCreate(ASizeData: Int32): PListSimple;
 begin
-  Result := GetMem(SizeOf(TSimpleList));
-  SimpleListInitialize(Result, ASizeData);
+  Result := GetMem(SizeOf(TListSimple));
+  ListSimpleInitialize(Result, ASizeData);
 end;
 
 
 {
   Finalizes and deallocates the list from the heap.
 
-  [i] If you have a list allocated on the stack, finalize it directly with the "SimpleListFinalize" function.
+  [i] If you have a list allocated on the stack, finalize it directly with the "ListSimpleFinalize" function.
 
   Parameters:
     • AList — a pointer to the structure of the list to finalize and deallocate.
 }
-procedure SimpleListDestroy(AList: PSimpleList);
+procedure ListSimpleDestroy(AList: PListSimple);
 begin
-  SimpleListFinalize(AList);
+  ListSimpleFinalize(AList);
   FreeMem(AList);
 end;
 
@@ -130,7 +130,7 @@ end;
     • AList     — a pointer to the structure of the list to initialize.
     • ASizeData — the size of the data in each node in bytes, in range [1,n].
 }
-procedure SimpleListInitialize(AList: PSimpleList; ASizeData: Int32);
+procedure ListSimpleInitialize(AList: PListSimple; ASizeData: Int32);
 begin
   AList^.NodeHead := nil;
   AList^.NodeTail := nil;
@@ -143,17 +143,17 @@ end;
   Finalizes an existing list.
 
   Since memory is allocated for each node individually, it simply frees all nodes in the list from memory. This function does
-  virtually the same thing as "SimpleListClear", except that it does not reset the fields in the list structure.
+  virtually the same thing as "ListSimpleClear", except that it does not reset the fields in the list structure.
 
   [i] This function should be used to finalize a list allocated on the stack.
 
   Parameters:
     • AList — a pointer to the structure of the list to finalize.
 }
-procedure SimpleListFinalize(AList: PSimpleList);
+procedure ListSimpleFinalize(AList: PListSimple);
 var
-  NodeCurr: PSimpleListNode;
-  NodeNext: PSimpleListNode;
+  NodeCurr: PListSimpleNode;
+  NodeNext: PListSimpleNode;
 begin
   NodeCurr := AList^.NodeHead;
 
@@ -176,10 +176,10 @@ end;
   Parameters:
     • AList — a pointer to the structure of the list.
 }
-procedure SimpleListClear(AList: PSimpleList);
+procedure ListSimpleClear(AList: PListSimple);
 var
-  NodeCurr: PSimpleListNode;
-  NodeNext: PSimpleListNode;
+  NodeCurr: PListSimpleNode;
+  NodeNext: PListSimpleNode;
 begin
   NodeCurr := AList^.NodeHead;
 
@@ -210,10 +210,10 @@ end;
     • AList     — a pointer to the structure of the list.
     • ACallback — a pointer to the callback function that compares the data of two nodes.
 }
-procedure SimpleListSortBubble(AList: PSimpleList; ACallback: TSimpleListNodeCallbackCompare);
+procedure ListSimpleSortBubble(AList: PListSimple; ACallback: TListSimpleNodeCallbackCompare);
 var
-  NodeLast:    PSimpleListNode;
-  NodeCurr:    PSimpleListNode;
+  NodeLast:    PListSimpleNode;
+  NodeCurr:    PListSimpleNode;
   NodeData:    Pointer;
   NodeSwapped: Boolean;
 begin
@@ -271,9 +271,9 @@ end;
   Result:
     • A non-nil pointer to the new node.
 }
-function SimpleListNodeCreate(AList: PSimpleList): PSimpleListNode;
+function ListSimpleNodeCreate(AList: PListSimple): PListSimpleNode;
 begin
-  Result := GetMem(SizeOf(TSimpleListNode) + AList^.SizeData);
+  Result := GetMem(SizeOf(TListSimpleNode) + AList^.SizeData);
 end;
 
 
@@ -283,14 +283,14 @@ end;
   This function is used to destroy an external node. Because this linked list is implemented in a classic way, memory for
   each node is deallocated separately.
 
-  [!] Never destroy a node that is not external. First detach it from the list using the "SimpleListNodeExtract" function
+  [!] Never destroy a node that is not external. First detach it from the list using the "ListSimpleNodeExtract" function
       and then release it using the function below.
 
   Parameters:
     • AList — a pointer to the structure of the list.
     • ANode — a pointer to the list node to destroy.
 }
-procedure SimpleListNodeDestroy(AList: PSimpleList; ANode: PSimpleListNode);
+procedure ListSimpleNodeDestroy(AList: PListSimple; ANode: PListSimpleNode);
 begin
   FreeMem(ANode);
 end;
@@ -309,7 +309,7 @@ end;
     • AList — a pointer to the structure of the list.
     • ANode — a pointer to an external node to detach from the list.
 }
-procedure SimpleListNodeExtract(AList: PSimpleList; ANode: PSimpleListNode);
+procedure ListSimpleNodeExtract(AList: PListSimple; ANode: PListSimpleNode);
 begin
   // If the node to be detached is not the head of the list, update the link of the previous node.
   // Otherwise, update the pointer to the head of the list.
@@ -339,13 +339,13 @@ end;
   [!] Never attempt to use this function to attach a node to a list that is already attached to it. Otherwise, the links in
       the list nodes will be broken and the list itself will no longer be coherent (generally, it will be UB).
 
-  [i] If you need to insert a node anywhere in the list, use the "SimpleListNodeInsert" function.
+  [i] If you need to insert a node anywhere in the list, use the "ListSimpleNodeInsert" function.
 
   Parameters:
     • AList — a pointer to the structure of the list.
     • ANode — a pointer to an external node to attach to the list.
 }
-procedure SimpleListNodeAppend(AList: PSimpleList; ANode: PSimpleListNode);
+procedure ListSimpleNodeAppend(AList: PListSimple; ANode: PListSimpleNode);
 begin
   // Set the links in the node to attach.
   ANode^.Prev := AList^.NodeTail;
@@ -375,13 +375,13 @@ end;
   [!] Never attempt to use this function to attach a node to a list that is already attached to it. Otherwise, the links in
       the list nodes will be broken and the list itself will no longer be coherent (generally, it will be UB).
 
-  [i] If you need to add a node to the end of the list, use the "SimpleListNodeAppend" function.
+  [i] If you need to add a node to the end of the list, use the "ListSimpleNodeAppend" function.
 
   Parameters:
     • AList — a pointer to the structure of the list.
     • ANode — a pointer to an external node to attach to the list.
 }
-procedure SimpleListNodeInsert(AList: PSimpleList; ANode, ADest: PSimpleListNode);
+procedure ListSimpleNodeInsert(AList: PListSimple; ANode, ADest: PListSimpleNode);
 begin
   // If the target node is not the head of the list, update its link to the next node.
   // Otherwise, the new node becomes the new head of the list.
