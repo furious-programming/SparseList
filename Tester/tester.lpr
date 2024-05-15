@@ -39,6 +39,7 @@ uses
   SimpleList,
   SparseList,
   SparseListDyn,
+  TestVector,
   TestSimpleList,
   TestSparseList,
   TestSparseListDyn,
@@ -46,6 +47,7 @@ uses
 label
   TestAgain;
 var
+  ListVector:    PVector;
   ListSimple:    PSimpleList;
   ListSparse:    PSparseList;
   ListSparseDyn: PSparseListDyn;
@@ -71,101 +73,118 @@ TestAgain:
 
   TestPrintHeader();
 
+  ListVector    := VectorCreate        (SizeOf(UInt32));
   ListSimple    := SimpleListCreate    (SizeOf(UInt32));
   ListSparse    := SparseListCreate    (SizeOf(UInt32), ListNodeNumSegment);
   ListSparseDyn := SparseListDynCreate (SizeOf(UInt32), ListNodeNumSegment);
 
   TestPrintResult('APPEND',
+    TestVectorAppend        (ListVector,    ListNodeNum),
     TestSimpleListAppend    (ListSimple,    ListNodeNum),
     TestSparseListAppend    (ListSparse,    ListNodeNum),
     TestSparseListDynAppend (ListSparseDyn, ListNodeNum)
   );
 
   TestPrintResult('TRAVERSE',
+    TestVectorTraverse        (ListVector),
     TestSimpleListTraverse    (ListSimple),
     TestSparseListTraverse    (ListSparse),
     TestSparseListDynTraverse (ListSparseDyn)
   );
 
   TestPrintResult('SORT',
+    TestVectorSort        (ListVector),
     TestSimpleListSort    (ListSimple),
     TestSparseListSort    (ListSparse),
     TestSparseListDynSort (ListSparseDyn)
   );
 
   TestPrintResult('TRAVERSE',
+    TestVectorTraverse        (ListVector),
     TestSimpleListTraverse    (ListSimple),
     TestSparseListTraverse    (ListSparse),
     TestSparseListDynTraverse (ListSparseDyn)
   );
 
   TestPrintResult('CLEAR',
+    TestVectorClear        (ListVector),
     TestSimpleListClear    (ListSimple),
     TestSparseListClear    (ListSparse),
     TestSparseListDynClear (ListSparseDyn)
   );
 
   TestPrintResult('APPEND',
+    TestVectorAppend        (ListVector,    ListNodeNum),
     TestSimpleListAppend    (ListSimple,    ListNodeNum),
     TestSparseListAppend    (ListSparse,    ListNodeNum),
     TestSparseListDynAppend (ListSparseDyn, ListNodeNum)
   );
 
   TestPrintResult('TRAVERSE',
+    TestVectorTraverse        (ListVector),
     TestSimpleListTraverse    (ListSimple),
     TestSparseListTraverse    (ListSparse),
     TestSparseListDynTraverse (ListSparseDyn)
   );
 
   TestPrintResult('CHOP',
+    TestVectorChop        (ListVector),
     TestSimpleListChop    (ListSimple),
     TestSparseListChop    (ListSparse),
     TestSparseListDynChop (ListSparseDyn)
   );
 
-  TestPrintResult('TRAVERSE',
+  TestPrintResult('TRAVERSE',          
+    TestVectorTraverse        (ListVector),
     TestSimpleListTraverse    (ListSimple),
     TestSparseListTraverse    (ListSparse),
     TestSparseListDynTraverse (ListSparseDyn)
   );
 
   TestPrintResult('INSERT',
+    TestVectorInsert        (ListVector),
     TestSimpleListInsert    (ListSimple),
     TestSparseListInsert    (ListSparse),
     TestSparseListDynInsert (ListSparseDyn)
   );
 
-  TestPrintResult('TRAVERSE',
+  TestPrintResult('TRAVERSE',          
+    TestVectorTraverse        (ListVector),
     TestSimpleListTraverse    (ListSimple),
     TestSparseListTraverse    (ListSparse),
     TestSparseListDynTraverse (ListSparseDyn)
   );
 
   TestPrintResult('SORT',
+    TestVectorSort        (ListVector),
     TestSimpleListSort    (ListSimple),
     TestSparseListSort    (ListSparse),
     TestSparseListDynSort (ListSparseDyn)
   );
 
-  TestPrintResult('TRAVERSE',
+  TestPrintResult('TRAVERSE',          
+    TestVectorTraverse        (ListVector),
     TestSimpleListTraverse    (ListSimple),
     TestSparseListTraverse    (ListSparse),
     TestSparseListDynTraverse (ListSparseDyn)
   );
 
   TestPrintResult('CHOP',
+    TestVectorChop        (ListVector),
     TestSimpleListChop    (ListSimple),
     TestSparseListChop    (ListSparse),
     TestSparseListDynChop (ListSparseDyn)
   );
 
-  TestPrintResult('TRAVERSE',
+  TestPrintResult('TRAVERSE',          
+    TestVectorTraverse        (ListVector),
     TestSimpleListTraverse    (ListSimple),
     TestSparseListTraverse    (ListSparse),
     TestSparseListDynTraverse (ListSparseDyn)
   );
 
   TestPrintResult('DESTROY',
+    TestVectorDestroy        (ListVector),
     TestSimpleListDestroy    (ListSimple),
     TestSparseListDestroy    (ListSparse),
     TestSparseListDynDestroy (ListSparseDyn)
