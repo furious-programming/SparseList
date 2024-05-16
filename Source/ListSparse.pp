@@ -104,7 +104,7 @@ implementation
 
   [i] If you have a list allocated on the stack, initialize it directly with the "ListSparseInitialize" function.
 
-  Parameters:
+  Arguments:
     • ASizeData       — the size of the data in each node in bytes, in range [1,n].
     • ANodeNumSegment — the number of nodes on each segment, in range [1,n].
 
@@ -123,7 +123,7 @@ end;
 
   [i] If you have a list allocated on the stack, finalize it directly with the "ListSparseFinalize" function.
 
-  Parameters:
+  Arguments:
     • AList — a pointer to the structure of the list to finalize and deallocate.
 }
 procedure ListSparseDestroy(AList: PListSparse);
@@ -142,7 +142,7 @@ end;
 
   [i] This function should be used to initialize a list allocated on the stack.
 
-  Parameters:
+  Arguments:
     • AList           — a pointer to the structure of the list to initialize.
     • ASizeData       — the size of the data in each node in bytes, in range [1,n].
     • ANodeNumSegment — the number of nodes on each segment, in range [1,n].
@@ -169,7 +169,7 @@ end;
 
   [i] This function should be used to finalize a list allocated on the stack.
 
-  Parameters:
+  Arguments:
     • AList — a pointer to the structure of the list to finalize.
 }
 procedure ListSparseFinalize(AList: PListSparse);
@@ -196,7 +196,7 @@ end;
   pointer and counter fields. Segments are never dynamically deallocated (they exist until the list is destroyed), so their
   unused nodes are in the bank waiting to be reused.
 
-  Parameters:
+  Arguments:
     • AList — a pointer to the structure of the list.
 }
 procedure ListSparseClear(AList: PListSparse);
@@ -221,7 +221,7 @@ end;
 
   [i] This function is implemented solely for the purposes of benchmarking the performance of access to nodes.
 
-  Parameters:
+  Arguments:
     • AList     — a pointer to the structure of the list.
     • ACallback — a pointer to the callback function that compares the data of two nodes.
 }
@@ -286,7 +286,7 @@ end;
       Losing its references will not cause a memory leak, but it will not be able to be returned to the bank, so the
       segment's node pool will shrink by one node.
 
-  Parameters:
+  Arguments:
     • AList — a pointer to the structure of the list.
 
   Result:
@@ -340,7 +340,7 @@ end;
   [!] Never destroy a node that is not external. First detach it from the list using the "ListSparseNodeExtract" function
       and then release it using the function below.
 
-  Parameters:
+  Arguments:
     • AList — a pointer to the structure of the list.
     • ANode — a pointer to the list node to destroy.
 }
@@ -362,7 +362,7 @@ end;
       yet. Losing its references will not cause a memory leak, but it will not be able to be returned to the bank, so the
       segment's node pool will shrink by one node.
 
-  Parameters:
+  Arguments:
     • AList — a pointer to the structure of the list.
     • ANode — a pointer to an external node to detach from the list.
 }
@@ -398,7 +398,7 @@ end;
 
   [i] If you need to insert a node anywhere in the list, use the "ListSparseNodeInsert" function.
 
-  Parameters:
+  Arguments:
     • AList — a pointer to the structure of the list.
     • ANode — a pointer to an external node to attach to the list.
 }
@@ -434,7 +434,7 @@ end;
 
   [i] If you need to add a node to the end of the list, use the "ListSparseNodeAppend" function.
 
-  Parameters:
+  Arguments:
     • AList — a pointer to the structure of the list.
     • ANode — a pointer to an external node to attach to the list.
 }

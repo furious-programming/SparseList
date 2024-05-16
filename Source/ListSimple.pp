@@ -93,7 +93,7 @@ implementation
 
   [i] If you have a list allocated on the stack, initialize it directly with the "ListSimpleInitialize" function.
 
-  Parameters:
+  Arguments:
     • ASizeData — the size of the data in each node in bytes, in range [1,n].
 
   Result:
@@ -111,7 +111,7 @@ end;
 
   [i] If you have a list allocated on the stack, finalize it directly with the "ListSimpleFinalize" function.
 
-  Parameters:
+  Arguments:
     • AList — a pointer to the structure of the list to finalize and deallocate.
 }
 procedure ListSimpleDestroy(AList: PListSimple);
@@ -126,7 +126,7 @@ end;
 
   [i] This function should be used to initialize a list allocated on the stack.
 
-  Parameters:
+  Arguments:
     • AList     — a pointer to the structure of the list to initialize.
     • ASizeData — the size of the data in each node in bytes, in range [1,n].
 }
@@ -147,7 +147,7 @@ end;
 
   [i] This function should be used to finalize a list allocated on the stack.
 
-  Parameters:
+  Arguments:
     • AList — a pointer to the structure of the list to finalize.
 }
 procedure ListSimpleFinalize(AList: PListSimple);
@@ -173,7 +173,7 @@ end;
   This function is used to remove all existing list nodes, which means iterating through all the nodes and freeing each of
   them from memory.
 
-  Parameters:
+  Arguments:
     • AList — a pointer to the structure of the list.
 }
 procedure ListSimpleClear(AList: PListSimple);
@@ -206,7 +206,7 @@ end;
 
   [i] This function is implemented solely for the purposes of benchmarking the performance of access to nodes.
 
-  Parameters:
+  Arguments:
     • AList     — a pointer to the structure of the list.
     • ACallback — a pointer to the callback function that compares the data of two nodes.
 }
@@ -265,7 +265,7 @@ end;
   [!] The node created by this function is an external node, i.e. it is not attached to the list yet. Losing its references
       will cause a memory leak, so be aware of this.
 
-  Parameters:
+  Arguments:
     • AList — a pointer to the structure of the list.
 
   Result:
@@ -286,7 +286,7 @@ end;
   [!] Never destroy a node that is not external. First detach it from the list using the "ListSimpleNodeExtract" function
       and then release it using the function below.
 
-  Parameters:
+  Arguments:
     • AList — a pointer to the structure of the list.
     • ANode — a pointer to the list node to destroy.
 }
@@ -305,7 +305,7 @@ end;
   [!] The node detached by this function becomes an external node, i.e. it is not attached to the list yet. Losing its
       reference will cause a memory leak, so be aware of this.
 
-  Parameters:
+  Arguments:
     • AList — a pointer to the structure of the list.
     • ANode — a pointer to an external node to detach from the list.
 }
@@ -341,7 +341,7 @@ end;
 
   [i] If you need to insert a node anywhere in the list, use the "ListSimpleNodeInsert" function.
 
-  Parameters:
+  Arguments:
     • AList — a pointer to the structure of the list.
     • ANode — a pointer to an external node to attach to the list.
 }
@@ -377,7 +377,7 @@ end;
 
   [i] If you need to add a node to the end of the list, use the "ListSimpleNodeAppend" function.
 
-  Parameters:
+  Arguments:
     • AList — a pointer to the structure of the list.
     • ANode — a pointer to an external node to attach to the list.
 }

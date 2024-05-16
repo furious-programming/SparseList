@@ -117,7 +117,7 @@ implementation
 
   [i] If you have a list allocated on the stack, initialize it directly with the "ListSparseDynInitialize" function.
 
-  Parameters:
+  Arguments:
     • ASizeData       — the size of the data in each node in bytes, in range [1,n].
     • ANodeNumSegment — the number of nodes on each segment, in range [1,n].
 
@@ -136,7 +136,7 @@ end;
 
   [i] If you have a list allocated on the stack, finalize it directly with the "ListSparseDynFinalize" function.
 
-  Parameters:
+  Arguments:
     • AList — a pointer to the structure of the list to finalize and deallocate.
 }
 procedure ListSparseDynDestroy(AList: PListSparseDyn);
@@ -155,7 +155,7 @@ end;
 
   [i] This function should be used to initialize a list allocated on the stack.
 
-  Parameters:
+  Arguments:
     • AList           — a pointer to the structure of the list to initialize.
     • ASizeData       — the size of the data in each node in bytes, in range [1,n].
     • ANodeNumSegment — the number of nodes on each segment, in range [1,n].
@@ -184,7 +184,7 @@ end;
 
   [i] This function should be used to finalize a list allocated on the stack.
 
-  Parameters:
+  Arguments:
     • AList — a pointer to the structure of the list to finalize.
 }
 procedure ListSparseDynFinalize(AList: PListSparseDyn);
@@ -211,7 +211,7 @@ end;
   segments are destroyed, the segment and node pointers and the node counter are reset so that the list appears empty and
   ready for further use. If the list is already empty, this function does nothing.
 
-  Parameters:
+  Arguments:
     • AList — a pointer to the structure of the list.
 }
 procedure ListSparseDynClear(AList: PListSparseDyn);
@@ -241,7 +241,7 @@ end;
 
   [i] This function is implemented solely for the purposes of benchmarking the performance of access to nodes.
 
-  Parameters:
+  Arguments:
     • AList     — a pointer to the structure of the list.
     • ACallback — a pointer to the callback function that compares the data of two nodes.
 }
@@ -303,7 +303,7 @@ end;
       yet. Losing its references will not cause a memory leak, but it will not be able to be returned to the segment bank, so
       the segment's node pool will shrink by one node.
 
-  Parameters:
+  Arguments:
     • AList — a pointer to the structure of the list.
 
   Result:
@@ -360,7 +360,7 @@ end;
   [!] Never destroy a node that is not external. First detach it from the list using the "ListSparseDynNodeExtract" function
       and then release it using the function below.
 
-  Parameters:
+  Arguments:
     • AList — a pointer to the structure of the list.
     • ANode — a pointer to the list node to destroy.
 }
@@ -406,7 +406,7 @@ end;
       the list yet. Losing its references will not cause a memory leak, but it will not be able to be returned to the segment
       bank, so the segment's node pool will shrink by one node.
 
-  Parameters:
+  Arguments:
     • AList — a pointer to the structure of the list.
     • ANode — a pointer to an external node to detach from the list.
 }
@@ -442,7 +442,7 @@ end;
 
   [i] If you need to insert a node anywhere in the list, use the "ListSparseDynNodeInsert" function.
 
-  Parameters:
+  Arguments:
     • AList — a pointer to the structure of the list.
     • ANode — a pointer to an external node to attach to the list.
 }
@@ -478,7 +478,7 @@ end;
 
   [i] If you need to add a node to the end of the list, use the "ListSparseDynNodeAppend" function.
 
-  Parameters:
+  Arguments:
     • AList — a pointer to the structure of the list.
     • ANode — a pointer to an external node to attach to the list.
 }
@@ -515,7 +515,7 @@ end;
   Since the bank is used like a stack (LIFO) and segment nodes are always pulled out and given back from and to the bank
   head, building a chain of nodes is limited only to setting a pointer to the next node in each segment node.
 
-  Parameters:
+  Arguments:
     • AList — a pointer to the structure of the list.
 
   Result:
@@ -580,7 +580,7 @@ end;
       segment will start pointing to unallocated memory, which will cause a segmentation fault when trying to read the node's
       data (link pointers or the actual node's payload).
 
-  Parameters:
+  Arguments:
     • AList    — a pointer to the structure of the list.
     • ASegment — a pointer to the segment to deallocate.
 }

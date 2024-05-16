@@ -83,7 +83,7 @@ implementation
 
   [i] If you have a vector allocated on the stack, initialize it directly with the "VectorInitialize" function.
 
-  Parameters:
+  Arguments:
     • ASizeData — the size of the item data in bytes, in range [1,n].
 
   Result:
@@ -101,7 +101,7 @@ end;
 
   [i] If you have a vector allocated on the stack, finalize it directly with the "VectorFinalize" function.
 
-  Parameters:
+  Arguments:
     • AVector — a pointer to the structure of the vector to finalize and deallocate.
 }
 procedure VectorDestroy(AVector: PVector);
@@ -119,7 +119,7 @@ end;
 
   [i] This function should be used to initialize a vector allocated on the stack.
 
-  Parameters:
+  Arguments:
     • AVector   — a pointer to the structure of the vector to initialize.
     • ASizeData — the size of the item data in bytes, in range [1,n].
 }
@@ -140,7 +140,7 @@ end;
 
   [i] This function should be used to finalize a vector allocated on the stack.
 
-  Parameters:
+  Arguments:
     • AVector — a pointer to the vector structure to finalize.
 }
 procedure VectorFinalize(AVector: PVector);
@@ -155,7 +155,7 @@ end;
   Since the vector buffer is never reallocated and shrunk, clearing the list is simply a matter of resetting the counter of
   items existing in the vector. The buffer memory block remains for the future.
 
-  Parameters:
+  Arguments:
     • AVector — a pointer to the vector structure to clear.
 }
 procedure VectorClear(AVector: PVector);
@@ -172,7 +172,7 @@ end;
   [!] Warning! This function uses untyped pointers to access vector items. Incrementing and decrementing untyped pointers
       concerns the number of bytes, not the size of the item, so be aware of that.
 
-  Parameters:
+  Arguments:
     • AVector   — a pointer to the vector structure to sort.
     • ACallback — a pointer to the callback function that compares the data of two items.
 }
@@ -231,7 +231,7 @@ end;
 
   [i] If you need to insert an item anywhere in the vector, use the "VectorDataInsert" function.
 
-  Parameters:
+  Arguments:
     • AVector — a pointer to the vector structure.
     • AData   — a pointer to the item data to be inserted into the list.
 }
@@ -263,7 +263,7 @@ end;
   a non-last item), the memory block of all subsequent items is moved towards the end of the buffer, making room for the new
   one. Finally, the new item's data is copied to the prepared place.
 
-  Parameters:
+  Arguments:
     • AVector — a pointer to the vector structure.
     • AData   — a pointer to the item data to be inserted into the list.
     • AIndex  — index of the item in which the new one will be inserted.
@@ -308,7 +308,7 @@ end;
   decrementing the item counter, the memory block of all subsequent items is moved towards the beginning of the buffer,
   overwriting the deleted item.
 
-  Parameters:
+  Arguments:
     • AVector — a pointer to the vector structure.
     • AIndex  — index of the item to be removed from the vector.
 }
