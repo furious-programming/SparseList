@@ -85,12 +85,13 @@ TestAgain:
     TestListSparseDynAppend (HandleSparseDyn, ListNodeNum)
   );
 
-  TestPrintResult('TRAVERSE',
+  TestPrintResult('<->',
     TestVectorTraverse        (HandleVector),
     TestListSimpleTraverse    (HandleSimple),
     TestListSparseTraverse    (HandleSparse),
     TestListSparseDynTraverse (HandleSparseDyn)
   );
+  WriteLn();
 
   TestPrintResult('SORT',
     TestVectorSort        (HandleVector),
@@ -99,12 +100,13 @@ TestAgain:
     TestListSparseDynSort (HandleSparseDyn)
   );
 
-  TestPrintResult('TRAVERSE',
+  TestPrintResult('<->',
     TestVectorTraverse        (HandleVector),
     TestListSimpleTraverse    (HandleSimple),
     TestListSparseTraverse    (HandleSparse),
     TestListSparseDynTraverse (HandleSparseDyn)
-  );
+  );               
+  WriteLn();
 
   TestPrintResult('CLEAR',
     TestVectorClear        (HandleVector),
@@ -120,12 +122,13 @@ TestAgain:
     TestListSparseDynAppend (HandleSparseDyn, ListNodeNum)
   );
 
-  TestPrintResult('TRAVERSE',
+  TestPrintResult('<->',
     TestVectorTraverse        (HandleVector),
     TestListSimpleTraverse    (HandleSimple),
     TestListSparseTraverse    (HandleSparse),
     TestListSparseDynTraverse (HandleSparseDyn)
-  );
+  );                 
+  WriteLn();
 
   TestPrintResult('CHOP',
     TestVectorChop        (HandleVector),
@@ -134,12 +137,13 @@ TestAgain:
     TestListSparseDynChop (HandleSparseDyn)
   );
 
-  TestPrintResult('TRAVERSE',          
+  TestPrintResult('<->',
     TestVectorTraverse        (HandleVector),
     TestListSimpleTraverse    (HandleSimple),
     TestListSparseTraverse    (HandleSparse),
     TestListSparseDynTraverse (HandleSparseDyn)
-  );
+  );                       
+  WriteLn();
 
   TestPrintResult('INSERT',
     TestVectorInsert        (HandleVector),
@@ -148,12 +152,13 @@ TestAgain:
     TestListSparseDynInsert (HandleSparseDyn)
   );
 
-  TestPrintResult('TRAVERSE',          
+  TestPrintResult('<->',
     TestVectorTraverse        (HandleVector),
     TestListSimpleTraverse    (HandleSimple),
     TestListSparseTraverse    (HandleSparse),
     TestListSparseDynTraverse (HandleSparseDyn)
-  );
+  );                    
+  WriteLn();
 
   TestPrintResult('SORT',
     TestVectorSort        (HandleVector),
@@ -162,12 +167,13 @@ TestAgain:
     TestListSparseDynSort (HandleSparseDyn)
   );
 
-  TestPrintResult('TRAVERSE',          
+  TestPrintResult('<->',
     TestVectorTraverse        (HandleVector),
     TestListSimpleTraverse    (HandleSimple),
     TestListSparseTraverse    (HandleSparse),
     TestListSparseDynTraverse (HandleSparseDyn)
-  );
+  );                        
+  WriteLn();
 
   TestPrintResult('CHOP',
     TestVectorChop        (HandleVector),
@@ -176,12 +182,13 @@ TestAgain:
     TestListSparseDynChop (HandleSparseDyn)
   );
 
-  TestPrintResult('TRAVERSE',          
+  TestPrintResult('<->',
     TestVectorTraverse        (HandleVector),
     TestListSimpleTraverse    (HandleSimple),
     TestListSparseTraverse    (HandleSparse),
     TestListSparseDynTraverse (HandleSparseDyn)
-  );
+  );                          
+  WriteLn();
 
   TestPrintResult('DESTROY',
     TestVectorDestroy        (HandleVector),
