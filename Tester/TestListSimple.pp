@@ -103,7 +103,7 @@ begin
     NodeSeed := NodeSeed xor (NodeSeed shl  5);
 
     NodeCurr   := NodeCurr^.Next;
-    NodeInsert := (NodeInsert + 1) and %11;
+    NodeInsert := (NodeInsert + 1) mod 2;
   end;
 
   Result := TestGetTicks() - Result;
@@ -130,7 +130,7 @@ begin
     end;
 
     Node     := NodeNext;
-    NodeChop := (NodeChop + 1) and %11;
+    NodeChop := (NodeChop + 1) mod 2;
   end;
 
   Result := TestGetTicks() - Result;

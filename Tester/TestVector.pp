@@ -95,7 +95,7 @@ begin
     DataSeed := DataSeed xor (DataSeed shl  5);
 
     DataIndex  += 1;
-    DataInsert := (DataIndex + 1) and %11;
+    DataInsert := (DataInsert + 1) mod 2;
   end;
 
   Result := TestGetTicks() - Result;
@@ -115,7 +115,7 @@ begin
       VectorDataDelete(AVector, DataIndex);
 
     DataIndex += 1;
-    DataChop  := (DataChop + 1) and %11;
+    DataChop  := (DataChop + 1) mod 2;
   end;
 
   Result := TestGetTicks() - Result;
