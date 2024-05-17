@@ -44,14 +44,19 @@ uses
   ListSparseDyn;
 
 
-  function  TestGetTicks    (): Int64; inline;
+  // Getting the time.
+  function  TestGetTicks    (): Int64; inline; // Returns the state of a high resolution clock.
 
-  procedure TestPrintHeader ();
-  procedure TestPrintFooter ();
-  procedure TestPrintResult (AName: String; ATimeVector, ATimeSimple, ATimeSparse, ATimeSparseDyn: Int64);
+  // Printing results.
+  procedure TestPrintHeader (); // Prints the header line of the results table.
+  procedure TestPrintFooter (); // Prints the footer line of the results table.
+  procedure TestPrintResult (AName: String; ATimeVector, ATimeSimple, ATimeSparse, ATimeSparseDyn: Int64); // Prints a line of text with the measurement results of a specific test.
 
   {$IFDEF BUILD_DEBUG}
-  procedure TestContent     (AVector: PVector; ASimple: PListSimple; ASparse: PListSparse; ASparseDyn: PListSparseDyn);
+
+  // Testing data integrity.
+  procedure TestContent     (AVector: PVector; ASimple: PListSimple; ASparse: PListSparse; ASparseDyn: PListSparseDyn); // Checks whether all containers contain the same amount of data and in the same order.
+
   {$ENDIF}
 
 
@@ -64,10 +69,20 @@ uses
 
 
 const
-  RESULT_FIELD_SIZE_NAME = 10;
-  RESULT_FIELD_SIZE_TIME = 16;
+  // The width of the result columns, in characters.
+  RESULT_FIELD_SIZE_NAME = 10; // For the name of a test.
+  RESULT_FIELD_SIZE_TIME = 16; // For the time and times results.
 
 
+{
+  Returns the state of a high resolution clock.
+
+  This function is designed to retrieve the tick count of a high-resolution hardware counter just before and just after the
+  execution of the instructions to which the measurement relates.
+
+  Result:
+    • High resolution clock status.
+}
 function TestGetTicks(): Int64;
 begin
   Result := 0;
@@ -75,6 +90,9 @@ begin
 end;
 
 
+{
+  Prints the header of the results table.
+}
 procedure TestPrintHeader();
 begin
   WriteLn(
@@ -94,6 +112,9 @@ begin
 end;
 
 
+{
+  Prints the footer line of the results table.
+}
 procedure TestPrintFooter();
 begin
   WriteLn(StringOfChar('_', RESULT_FIELD_SIZE_NAME + RESULT_FIELD_SIZE_TIME * 8 + 10));
@@ -101,6 +122,16 @@ begin
 end;
 
 
+{
+  Prints a line of text with the measurement results of a specific test.
+
+  Arguments:
+    • AName          — a short name of the test.
+    • ATimeVector    — test execution time on the vector.
+    • ATimeSimple    — test execution time on the simple linked list.
+    • ATimeSparse    — test execution time on the sprase linked list.
+    • ATimeSparseDyn — test execution time on the sprase dynamic linked list.
+}
 procedure TestPrintResult(AName: String; ATimeVector, ATimeSimple, ATimeSparse, ATimeSparseDyn: Int64);
 var
   PlaceVector:    Int64;
@@ -109,11 +140,13 @@ var
   PlaceSparseDyn: Int64;
   TimeMin:        Int64;
 begin
+  // If the time is "0", it is better to set it as "1" to avoid dividing by "0".
   ATimeVector    := Max(1, ATimeVector);
   ATimeSimple    := Max(1, ATimeSimple);
   ATimeSparse    := Max(1, ATimeSparse);
   ATimeSparseDyn := Max(1, ATimeSparseDyn);
 
+  // Print the number of ticks of all measurements, with a thousand separator.
   Write(
     AName:RESULT_FIELD_SIZE_NAME,
     Format('%.0n', [ATimeVector    + 0.0]):RESULT_FIELD_SIZE_TIME,
@@ -122,12 +155,15 @@ begin
     Format('%.0n', [ATimeSparseDyn + 0.0]):RESULT_FIELD_SIZE_TIME
   );
 
+  // Determine the shortest time of the measurement.
   TimeMin := ATimeVector;
 
   if ATimeSimple    < TimeMin then TimeMin := ATimeSimple;
   if ATimeSparse    < TimeMin then TimeMin := ATimeSparse;
   if ATimeSparseDyn < TimeMin then TimeMin := ATimeSparseDyn;
 
+  // Print data on how many times the execution of a given test was slower than the fastest one. The best result is displayed
+  // as a dash to make it clearly visible in the table.
   Write(
     IfThen(ATimeVector    = TimeMin, '-', Format('%.2nx', [ATimeVector    / TimeMin])):RESULT_FIELD_SIZE_TIME,
     IfThen(ATimeSimple    = TimeMin, '-', Format('%.2nx', [ATimeSimple    / TimeMin])):RESULT_FIELD_SIZE_TIME,
@@ -135,11 +171,13 @@ begin
     IfThen(ATimeSparseDyn = TimeMin, '-', Format('%.2nx', [ATimeSparseDyn / TimeMin])):RESULT_FIELD_SIZE_TIME
   );
 
+  // Calculate what place each container took in the test.
   PlaceVector    := 1 + Ord(ATimeVector    > ATimeSimple) + Ord(ATimeVector    > ATimeSparse) + Ord(ATimeVector    > ATimeSparseDyn);
   PlaceSimple    := 1 + Ord(ATimeSimple    > ATimeVector) + Ord(ATimeSimple    > ATimeSparse) + Ord(ATimeSimple    > ATimeSparseDyn);
   PlaceSparse    := 1 + Ord(ATimeSparse    > ATimeVector) + Ord(ATimeSparse    > ATimeSimple) + Ord(ATimeSparse    > ATimeSparseDyn);
   PlaceSparseDyn := 1 + Ord(ATimeSparseDyn > ATimeVector) + Ord(ATimeSparseDyn > ATimeSimple) + Ord(ATimeSparseDyn > ATimeSparse);
 
+  // Print the podium.
   WriteLn('    ',
     IfThen(PlaceVector    = 1, '-', PlaceVector.ToString()), ' ',
     IfThen(PlaceSimple    = 1, '-', PlaceSimple.ToString()), ' ',
@@ -151,6 +189,19 @@ end;
 
 {$IFDEF BUILD_DEBUG}
 
+{
+  Checks whether all containers contain the same amount of data and in the same order.
+
+  This function is for debugging purposes only and is used to check whether each container has the same amount of data and,
+  if so, whether the data is in the same order. If the contents of any container differ from the norm, the function generates
+  a runtime error. It should be used after every test during which the contents of the containers change.
+
+  Arguments:
+    • AVector        — a pointer to the vector structure.
+    • AListSimple    — a pointer to the simple linked list structure.
+    • AListSparse    — a pointer to the sparse linked list structure.
+    • AListSparseDyn — a pointer to the sparse dynamic linked list structure.
+}
 procedure TestContent(AVector: PVector; ASimple: PListSimple; ASparse: PListSparse; ASparseDyn: PListSparseDyn);
 var
   DataNum:       Int32;
