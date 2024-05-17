@@ -211,6 +211,7 @@ begin
 
       // Regardless of whether there was a swap or not, go to the next item.
       DataCurr += AVector^.SizeData;
+      DataNext += AVector^.SizeData;
     until DataCurr = DataLast;
 
     // Move the sentinel one item towards the beginning of the vector to reduce the number of iterations.
