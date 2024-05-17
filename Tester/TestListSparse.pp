@@ -41,13 +41,14 @@ uses
   ListSparse;
 
 
-  function TestListSparseAppend   (AList: PListSparse; ANodeNum: Int32): Int64;
-  function TestListSparseInsert   (AList: PListSparse): Int64;
-  function TestListSparseChop     (AList: PListSparse): Int64;
-  function TestListSparseSort     (AList: PListSparse): Int64;
-  function TestListSparseClear    (AList: PListSparse): Int64;
-  function TestListSparseTraverse (AList: PListSparse): Int64;
-  function TestListSparseDestroy  (AList: PListSparse): Int64;
+  // Measuring specific list functions.
+  function TestListSparseAppend   (AList: PListSparse; ANodeNum: Int32): Int64; // Measures the speed of adding a given number of nodes to a list.
+  function TestListSparseInsert   (AList: PListSparse): Int64; // Measures the speed of inserting a given number of nodes into a list.
+  function TestListSparseChop     (AList: PListSparse): Int64; // Measures the speed of removing nodes from a list.
+  function TestListSparseSort     (AList: PListSparse): Int64; // Measures the speed of sorting nodes in a list.
+  function TestListSparseClear    (AList: PListSparse): Int64; // Measures the speed of list cleaning.
+  function TestListSparseTraverse (AList: PListSparse): Int64; // Measures the speed of iterating over the nodes of a list.
+  function TestListSparseDestroy  (AList: PListSparse): Int64; // Measures the speed of cleaning and destroying the list.
 
 
 implementation
@@ -56,17 +57,37 @@ uses
   TestUtils;
 
 
+{
+  Measures the speed of adding a given number of nodes to a list.
+
+  This function measures the duration of the operation of adding a given number of nodes to the list. Data for the list nodes
+  are generated based on the 32-bit Xorshift algorithm, so the generated numbers are relatively random and unordered for the
+  later list sorting test.
+
+  [!] For the sorting test to make sense, item data for all tested containers must be generated in the same way. This ensures
+      that all sorting functions perform the same number of iterations.
+
+  Arguments:
+    • AList    — a pointer to the list structure.
+    • ADataNum — the number of nodes to add to the list.
+
+  Result:
+    • The number of ticks on the hardware clock as the duration of the operation.
+}
 function TestListSparseAppend(AList: PListSparse; ANodeNum: Int32): Int64;
 var
   NodeSeed: UInt32 = $600D5EED;
 begin
+  // Remember the time when the test started.
   Result := TestGetTicks();
 
   while ANodeNum > 0 do
   begin
+    // Add node with data to the end of the list.
     ListSparseNodeAppend(AList, ListSparseNodeCreate(AList));
     PUInt32(@AList^.NodeTail^.Data)^ := NodeSeed;
 
+    // Generate another pseudo-random number according to the Xorshift algorithm.
     NodeSeed := NodeSeed xor (NodeSeed shl 13);
     NodeSeed := NodeSeed xor (NodeSeed shr 17);
     NodeSeed := NodeSeed xor (NodeSeed shl  5);
@@ -74,10 +95,27 @@ begin
     ANodeNum -= 1;
   end;
 
+  // Calculate how many ticks the operation took.
   Result := TestGetTicks() - Result;
 end;
 
 
+{
+  Measures the speed of inserting a given number of nodes into a list.
+
+  This function iterates over all list nodes and inserts new nodes in place of every second existing node. The result of this
+  function is to increase the number of nodes by one third and to insert nodes with pseudo-random data into it for the purpose
+  of a further sorting test.
+
+  [!] For the sorting test to make sense, item data for all tested containers must be generated in the same way. This ensures
+      that all sorting functions perform the same number of iterations.
+
+  Arguments:
+    • AList — a pointer to the list structure.
+
+  Result:
+    • The number of ticks on the hardware clock as the duration of the operation.
+}
 function TestListSparseInsert(AList: PListSparse): Int64;
 var
   NodeNew:    PListSparseNode;
@@ -85,11 +123,14 @@ var
   NodeInsert: Int32  = 0;
   NodeSeed:   UInt32 = $BAD5EED;
 begin
+  // Remember the time when the test started.
   Result   := TestGetTicks();
   NodeCurr := AList^.NodeHead;
 
+  // Iterate until the end of the list.
   while NodeCurr <> nil do
   begin
+    // If it's time, insert a new node into the list.
     if NodeInsert = 0 then
     begin
       NodeNew := ListSparseNodeCreate(AList);
@@ -98,100 +139,193 @@ begin
       ListSparseNodeInsert(AList, NodeNew, NodeCurr);
     end;
 
+    // Generate another pseudo-random number according to the Xorshift algorithm.
     NodeSeed := NodeSeed xor (NodeSeed shl 13);
     NodeSeed := NodeSeed xor (NodeSeed shr 17);
     NodeSeed := NodeSeed xor (NodeSeed shl  5);
 
+    // Go to the next node and update the counter that determines when to insert a node.
     NodeCurr   := NodeCurr^.Next;
     NodeInsert := (NodeInsert + 1) mod 2;
   end;
 
+  // Calculate how many ticks the operation took.
   Result := TestGetTicks - Result;
 end;
 
 
+{
+  Measures the speed of removing nodes from a list.
+
+  This function iterates from the beginning to the end of the list and removes every second node from it.
+
+  Arguments:
+    • AList — a pointer to the list structure.
+
+  Result:
+    • The number of ticks on the hardware clock as the duration of the operation.
+}
 function TestListSparseChop(AList: PListSparse): Int64;
 var
   Node:     PListSparseNode;
   NodeNext: PListSparseNode;
   NodeChop: Int32 = 0;
 begin
+  // Remember the time when the test started.
   Result := TestGetTicks();
   Node   := AList^.NodeHead;
 
+  // Iterate until the end of the list.
   while Node <> nil do
   begin
     NodeNext := Node^.Next;
 
+    // If it's time, delete a node from the list.
     if NodeChop = 0 then
     begin
       ListSparseNodeExtract(AList, Node);
       ListSparseNodeDestroy(AList, Node);
     end;
 
+    // Go to the next node and update the counter that determines when to delete a node.
     Node     := NodeNext;
     NodeChop := (NodeChop + 1) mod 2;
   end;
 
+  // Calculate how many ticks the operation took.
   Result := TestGetTicks - Result;
 end;
 
 
+  {
+    Compares data of two list nodes.
+
+    Arguments:
+      • ADataA — pointer to the first node's data.
+      • ADataB — pointer to the second node's data.
+
+    Result:
+      • False — node data will not be swapped.
+      • True  — node data will be swapped (will be moved towards the end of the list).
+  }
   function TestSparseListSortNodes(ANodeA, ANodeB: PListSparseNode): Boolean;
   begin
     Result := PUInt32(@ANodeA^.Data)^ > PUInt32(@ANodeB^.Data)^;
   end;
 
+
+{
+  Measures the speed of sorting nodes in a list.
+
+  Arguments:
+    • AList — a pointer to the list structure.
+
+  Result:
+    • The number of ticks on the hardware clock as the duration of the operation.
+}
 function TestListSparseSort(AList: PListSparse): Int64;
 begin
+  // Remember the time when the test started.
   Result := TestGetTicks();
+
+  // Sort the list content using the bubble sort algorithm.
   ListSparseSortBubble(AList, @TestSparseListSortNodes);
+
+  // Calculate how many ticks the operation took.
   Result := TestGetTicks() - Result;
 end;
 
 
+{
+  Measures the speed of list cleaning.
+
+  Arguments:
+    • AList — a pointer to the list structure.
+
+  Result:
+    • The number of ticks on the hardware clock as the duration of the operation.
+}
 function TestListSparseClear(AList: PListSparse): Int64;
 begin
+  // Remember the time when the test started.
   Result := TestGetTicks();
+
+  // Clear the list.
   ListSparseClear(AList);
+
+  // Calculate how many ticks the operation took.
   Result := TestGetTicks() - Result;
 end;
 
 
+{
+  Measures the speed of iterating over the nodes of a list.
+
+  This function traverses the list in both directions, testing the CPU's caching ability.
+
+  Arguments:
+    • AList — a pointer to the list structure.
+
+  Result:
+    • The number of ticks on the hardware clock as the duration of the operation.
+}
 function TestListSparseTraverse(AList: PListSparse): Int64;
 var
   Node: PListSparseNode;
   Num:  Int32 = 0;
 begin
+  // Remember the time when the test started.
   Result := TestGetTicks();
   Node   := AList^.NodeHead;
 
+  // Iterate from the first to the last list node.
   while Node <> nil do
   begin
+    // If an odd number is encountered, increment the dummy counter.
     if PUInt32(@Node^.Data)^ and 1 = 1 then
       Num += 1;
 
+    // Go to the next node.
     Node := Node^.Next;
   end;
 
+  // Now start from the last list node.
   Node := AList^.NodeTail;
 
+  // Iterate from the last to the first list node.
   while Node <> nil do
   begin
+    // If an even number is encountered, decrement the dummy counter.
     if PUInt32(@Node^.Data)^ and 1 = 0 then
       Num -= 1;
 
+    // Go to the previous node.
     Node := Node^.Prev;
   end;
 
+  // Calculate how many ticks the operation took.
   Result := TestGetTicks() - Result;
 end;
 
 
+{
+  Measures the speed of cleaning and destroying the list.
+
+  Arguments:
+    • AList — a pointer to the list structure.
+
+  Result:
+    • The number of ticks on the hardware clock as the duration of the operation.
+}
 function TestListSparseDestroy(AList: PListSparse): Int64;
 begin
+  // Remember the time when the test started.
   Result := TestGetTicks();
+
+  // Clear and destroy the list.
   ListSparseDestroy(AList);
+
+  // Calculate how many ticks the operation took.
   Result := TestGetTicks() - Result;
 end;
 
