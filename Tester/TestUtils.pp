@@ -93,12 +93,17 @@ end;
 
 procedure TestPrintResult(AName: String; ATimeVector, ATimeSimple, ATimeSparse, ATimeSparseDyn: Int64);
 var
-  PercentVector:    Int64;
-  PercentSimple:    Int64;
-  PercentSparse:    Int64;
-  PercentSparseDyn: Int64;
-  TimeMin:          Int64;
+  PlaceVector:    Int64;
+  PlaceSimple:    Int64;
+  PlaceSparse:    Int64;
+  PlaceSparseDyn: Int64;
+  TimeMin:        Int64;
 begin
+  ATimeVector    := Max(1, ATimeVector);
+  ATimeSimple    := Max(1, ATimeSimple);
+  ATimeSparse    := Max(1, ATimeSparse);
+  ATimeSparseDyn := Max(1, ATimeSparseDyn);
+
   Write(
     AName:RESULT_FIELD_SIZE_NAME,
     Format('%.0n', [ATimeVector    + 0.0]):RESULT_FIELD_SIZE_TIME,
@@ -113,31 +118,23 @@ begin
   if ATimeSparse    < TimeMin then TimeMin := ATimeSparse;
   if ATimeSparseDyn < TimeMin then TimeMin := ATimeSparseDyn;
 
-  if TimeMin = 0 then
-    TimeMin := 1;
-
-  PercentVector    := Round(ATimeVector    * 100 / TimeMin);
-  PercentSimple    := Round(ATimeSimple    * 100 / TimeMin);
-  PercentSparse    := Round(ATimeSparse    * 100 / TimeMin);
-  PercentSparseDyn := Round(ATimeSparseDyn * 100 / TimeMin);
-
   Write(
-    IfThen(PercentVector    = 100, '-', Format('%.0n%%', [PercentVector    + 0.0])):RESULT_FIELD_SIZE_TIME,
-    IfThen(PercentSimple    = 100, '-', Format('%.0n%%', [PercentSimple    + 0.0])):RESULT_FIELD_SIZE_TIME,
-    IfThen(PercentSparse    = 100, '-', Format('%.0n%%', [PercentSparse    + 0.0])):RESULT_FIELD_SIZE_TIME,
-    IfThen(PercentSparseDyn = 100, '-', Format('%.0n%%', [PercentSparseDyn + 0.0])):RESULT_FIELD_SIZE_TIME
+    IfThen(ATimeVector    = TimeMin, '-', Format('%.2nx', [ATimeVector    / TimeMin])):RESULT_FIELD_SIZE_TIME,
+    IfThen(ATimeSimple    = TimeMin, '-', Format('%.2nx', [ATimeSimple    / TimeMin])):RESULT_FIELD_SIZE_TIME,
+    IfThen(ATimeSparse    = TimeMin, '-', Format('%.2nx', [ATimeSparse    / TimeMin])):RESULT_FIELD_SIZE_TIME,
+    IfThen(ATimeSparseDyn = TimeMin, '-', Format('%.2nx', [ATimeSparseDyn / TimeMin])):RESULT_FIELD_SIZE_TIME
   );
 
-  PercentVector    := 1 + Ord(ATimeVector    > ATimeSimple) + Ord(ATimeVector    > ATimeSparse) + Ord(ATimeVector    > ATimeSparseDyn);
-  PercentSimple    := 1 + Ord(ATimeSimple    > ATimeVector) + Ord(ATimeSimple    > ATimeSparse) + Ord(ATimeSimple    > ATimeSparseDyn);
-  PercentSparse    := 1 + Ord(ATimeSparse    > ATimeVector) + Ord(ATimeSparse    > ATimeSimple) + Ord(ATimeSparse    > ATimeSparseDyn);
-  PercentSparseDyn := 1 + Ord(ATimeSparseDyn > ATimeVector) + Ord(ATimeSparseDyn > ATimeSimple) + Ord(ATimeSparseDyn > ATimeSparse);
+  PlaceVector    := 1 + Ord(ATimeVector    > ATimeSimple) + Ord(ATimeVector    > ATimeSparse) + Ord(ATimeVector    > ATimeSparseDyn);
+  PlaceSimple    := 1 + Ord(ATimeSimple    > ATimeVector) + Ord(ATimeSimple    > ATimeSparse) + Ord(ATimeSimple    > ATimeSparseDyn);
+  PlaceSparse    := 1 + Ord(ATimeSparse    > ATimeVector) + Ord(ATimeSparse    > ATimeSimple) + Ord(ATimeSparse    > ATimeSparseDyn);
+  PlaceSparseDyn := 1 + Ord(ATimeSparseDyn > ATimeVector) + Ord(ATimeSparseDyn > ATimeSimple) + Ord(ATimeSparseDyn > ATimeSparse);
 
   WriteLn('    ',
-    IfThen(PercentVector    = 1, '-', PercentVector.ToString()), ' ',
-    IfThen(PercentSimple    = 1, '-', PercentSimple.ToString()), ' ',
-    IfThen(PercentSparse    = 1, '-', PercentSparse.ToString()), ' ',
-    IfThen(PercentSparseDyn = 1, '-', PercentSparseDyn.ToString())
+    IfThen(PlaceVector    = 1, '-', PlaceVector.ToString()), ' ',
+    IfThen(PlaceSimple    = 1, '-', PlaceSimple.ToString()), ' ',
+    IfThen(PlaceSparse    = 1, '-', PlaceSparse.ToString()), ' ',
+    IfThen(PlaceSparseDyn = 1, '-', PlaceSparseDyn.ToString())
   );
 end;
 
