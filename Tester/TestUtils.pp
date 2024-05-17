@@ -142,7 +142,6 @@ var
   PlaceSimple:    Int64;
   PlaceSparse:    Int64;
   PlaceSparseDyn: Int64;
-  TimeMin:        Int64;
 begin
   // If the time is "0", it is better to set it as "1" to avoid dividing by "0".
   ATimeVector    := Max(1, ATimeVector);
@@ -159,20 +158,13 @@ begin
     Format('%.0n', [ATimeSparseDyn + 0.0]):RESULT_FIELD_SIZE_TIME
   );
 
-  // Determine the shortest time of the measurement.
-  TimeMin := ATimeVector;
-
-  if ATimeSimple    < TimeMin then TimeMin := ATimeSimple;
-  if ATimeSparse    < TimeMin then TimeMin := ATimeSparse;
-  if ATimeSparseDyn < TimeMin then TimeMin := ATimeSparseDyn;
-
   // Print data on how many times the execution of a given test was slower than the fastest one. The best result is displayed
   // as a dash to make it clearly visible in the table.
   Write(
-    IfThen(ATimeVector    = TimeMin, '-', Format('%.2nx', [ATimeVector    / TimeMin])):RESULT_FIELD_SIZE_TIME,
-    IfThen(ATimeSimple    = TimeMin, '-', Format('%.2nx', [ATimeSimple    / TimeMin])):RESULT_FIELD_SIZE_TIME,
-    IfThen(ATimeSparse    = TimeMin, '-', Format('%.2nx', [ATimeSparse    / TimeMin])):RESULT_FIELD_SIZE_TIME,
-    IfThen(ATimeSparseDyn = TimeMin, '-', Format('%.2nx', [ATimeSparseDyn / TimeMin])):RESULT_FIELD_SIZE_TIME
+    Format('%.2nx', [ATimeVector    / ATimeSparse]):RESULT_FIELD_SIZE_TIME,
+    Format('%.2nx', [ATimeSimple    / ATimeSparse]):RESULT_FIELD_SIZE_TIME,
+    Format('%.2nx', [ATimeSparse    / ATimeSparse]):RESULT_FIELD_SIZE_TIME,
+    Format('%.2nx', [ATimeSparseDyn / ATimeSparse]):RESULT_FIELD_SIZE_TIME
   );
 
   // Calculate what place each container took in the test.
@@ -183,10 +175,10 @@ begin
 
   // Print the podium.
   WriteLn('    ',
-    IfThen(PlaceVector    = 1, '-', PlaceVector.ToString()), ' ',
-    IfThen(PlaceSimple    = 1, '-', PlaceSimple.ToString()), ' ',
-    IfThen(PlaceSparse    = 1, '-', PlaceSparse.ToString()), ' ',
-    IfThen(PlaceSparseDyn = 1, '-', PlaceSparseDyn.ToString())
+    PlaceVector.ToString(), ' ',
+    PlaceSimple.ToString(), ' ',
+    PlaceSparse.ToString(), ' ',
+    PlaceSparseDyn.ToString()
   );
 end;
 
