@@ -30,8 +30,8 @@
   For more information, please refer to <http://unlicense.org/>
 }
 
-// Global compiler switches.
-{$INCLUDE TestSwitches.inc}
+  // Global compiler switches.
+  {$INCLUDE TestSwitches.inc}
 
 uses
   Math,
