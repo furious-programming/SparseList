@@ -85,6 +85,10 @@ TestAgain:
     TestListSparseDynAppend (HandleSparseDyn, ListNodeNum)
   );
 
+  {$IFDEF BUILD_DEBUG}
+  TestContent(HandleVector, HandleSimple, HandleSparse, HandleSparseDyn);
+  {$ENDIF}
+
   TestPrintResult('<->',
     TestVectorTraverse        (HandleVector),
     TestListSimpleTraverse    (HandleSimple),
@@ -99,6 +103,10 @@ TestAgain:
     TestListSparseSort    (HandleSparse),
     TestListSparseDynSort (HandleSparseDyn)
   );
+
+  {$IFDEF BUILD_DEBUG}
+  TestContent(HandleVector, HandleSimple, HandleSparse, HandleSparseDyn);
+  {$ENDIF}
 
   TestPrintResult('<->',
     TestVectorTraverse        (HandleVector),
@@ -115,12 +123,20 @@ TestAgain:
     TestListSparseDynClear (HandleSparseDyn)
   );
 
+  {$IFDEF BUILD_DEBUG}
+  TestContent(HandleVector, HandleSimple, HandleSparse, HandleSparseDyn);
+  {$ENDIF}
+
   TestPrintResult('APPEND',
     TestVectorAppend        (HandleVector,    ListNodeNum),
     TestListSimpleAppend    (HandleSimple,    ListNodeNum),
     TestListSparseAppend    (HandleSparse,    ListNodeNum),
     TestListSparseDynAppend (HandleSparseDyn, ListNodeNum)
   );
+
+  {$IFDEF BUILD_DEBUG}
+  TestContent(HandleVector, HandleSimple, HandleSparse, HandleSparseDyn);
+  {$ENDIF}
 
   TestPrintResult('<->',
     TestVectorTraverse        (HandleVector),
@@ -137,6 +153,10 @@ TestAgain:
     TestListSparseDynChop (HandleSparseDyn)
   );
 
+  {$IFDEF BUILD_DEBUG}
+  TestContent(HandleVector, HandleSimple, HandleSparse, HandleSparseDyn);
+  {$ENDIF}
+
   TestPrintResult('<->',
     TestVectorTraverse        (HandleVector),
     TestListSimpleTraverse    (HandleSimple),
@@ -151,6 +171,10 @@ TestAgain:
     TestListSparseInsert    (HandleSparse),
     TestListSparseDynInsert (HandleSparseDyn)
   );
+
+  {$IFDEF BUILD_DEBUG}
+  TestContent(HandleVector, HandleSimple, HandleSparse, HandleSparseDyn);
+  {$ENDIF}
 
   TestPrintResult('<->',
     TestVectorTraverse        (HandleVector),
@@ -167,6 +191,10 @@ TestAgain:
     TestListSparseDynSort (HandleSparseDyn)
   );
 
+  {$IFDEF BUILD_DEBUG}
+  TestContent(HandleVector, HandleSimple, HandleSparse, HandleSparseDyn);
+  {$ENDIF}
+
   TestPrintResult('<->',
     TestVectorTraverse        (HandleVector),
     TestListSimpleTraverse    (HandleSimple),
@@ -182,12 +210,35 @@ TestAgain:
     TestListSparseDynChop (HandleSparseDyn)
   );
 
+  {$IFDEF BUILD_DEBUG}
+  TestContent(HandleVector, HandleSimple, HandleSparse, HandleSparseDyn);
+  {$ENDIF}
+
   TestPrintResult('<->',
     TestVectorTraverse        (HandleVector),
     TestListSimpleTraverse    (HandleSimple),
     TestListSparseTraverse    (HandleSparse),
     TestListSparseDynTraverse (HandleSparseDyn)
   );                          
+  WriteLn();
+
+  TestPrintResult('SORT',
+    TestVectorSort        (HandleVector),
+    TestListSimpleSort    (HandleSimple),
+    TestListSparseSort    (HandleSparse),
+    TestListSparseDynSort (HandleSparseDyn)
+  );
+
+  {$IFDEF BUILD_DEBUG}
+  TestContent(HandleVector, HandleSimple, HandleSparse, HandleSparseDyn);
+  {$ENDIF}
+
+  TestPrintResult('<->',
+    TestVectorTraverse        (HandleVector),
+    TestListSimpleTraverse    (HandleSimple),
+    TestListSparseTraverse    (HandleSparse),
+    TestListSparseDynTraverse (HandleSparseDyn)
+  );
   WriteLn();
 
   TestPrintResult('DESTROY',
