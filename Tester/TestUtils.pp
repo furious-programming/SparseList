@@ -37,11 +37,15 @@ unit TestUtils;
 
 interface
 
+{$IFDEF BUILD_DEBUG}
+
 uses
   Vector,
   ListSimple,
   ListSparse,
   ListSparseDyn;
+
+{$ENDIF}
 
 
   // Getting the time.
