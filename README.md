@@ -36,6 +36,8 @@ Since this list cannot have one bank with all unused nodes from all segments, wh
 
 Since the performance of these lists depends on the specific practical application, mainly the size of the segments, the size of the data in the nodes, as well as the number of nodes used in the lists and the frequency and locations of node reorganization, the performance gain from node segmentation cannot be predicted. If you want to know what performance will be like, measure it in your project specifically. These lists are nothing groundbreaking, their performance should be higher than in the case of classic lists, but the performance gain may be negligible.
 
+If you want to perform a general performance test of individual containers, there is a simple console tool for this purpose on the [releases page](https://github.com/furious-programming/SparseList/releases). You can specify the number of items that will be added to containers, as well as the size of segments in lists. After performing each test, the results will be displayed in the console in the form of a simple table.
+
 # License
 
 Sources are unlicensed. To learn more about this, see the [LICENSE](LICENSE) file.
