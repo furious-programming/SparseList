@@ -34,6 +34,7 @@
   {$INCLUDE TestSwitches.inc}
 
 uses
+  CMem,
   Math,
   Vector,
   ListSimple,
