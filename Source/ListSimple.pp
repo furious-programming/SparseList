@@ -1,7 +1,7 @@
 
 {
   Simple Doubly-linked List.
-  Copyleft © 2024 furious programming. All rights reversed.
+  Copyleft (ɔ) 2024 furious programming. All rights reversed.
   _______________________________________________________________________
 
   This is free and unencumbered software released into the public domain.
